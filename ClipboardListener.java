@@ -21,7 +21,7 @@ class BoardListener extends Thread implements ClipboardOwner {
   
 	public void lostOwnership(Clipboard c, Transferable t) {
 		try { //Add delay to prevent exception
-			Thread.sleep(200);
+			Thread.sleep(400);
 			
 		} catch (Exception e) {
 			System.out.println("Exception: " + e);
