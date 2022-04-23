@@ -393,8 +393,8 @@ public class ClipboardToTxt implements ActionListener,
 
 		} else if (command.equals("Open File")) {
 			if (selectedFile == null) {
-				System.out.println("No file selected to open! Please select a file.");
-				consoleLog("No file selected to open! Please select a file.");
+				System.out.println("Please select a file to open!");
+				consoleLog("Please select a file to open!");
 				return;
 			}
 
@@ -520,8 +520,7 @@ public class ClipboardToTxt implements ActionListener,
 			try {
 				int limitInt = Integer.valueOf(limit);
 				int numberInt = Integer.valueOf(number);
-				int lengthOfNum = String.valueOf(numberInt).length();
-				limit = String.valueOf(limitInt + lengthOfNum);
+				limit = String.valueOf(limitInt);
 
 				String newFormat = "%0" + limit + "d";
 				number = String.format(newFormat, numberInt);
