@@ -1,11 +1,10 @@
 package main;
 
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class ClipboardToTxt {
-
-	
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -15,8 +14,12 @@ public class ClipboardToTxt {
 		} catch (IllegalAccessException e) {
 		}
 
-		new ClipboardToTxt();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                final MainWindow wnd = new MainWindow("Clipboard To Txt");
+                wnd.setVisible(true);
+            }
+        });
 	}
-
-	
 }

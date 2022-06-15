@@ -41,7 +41,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.PlainDocument;
 
-public class MainWindow implements ActionListener,
+public class MainWindow extends JFrame implements ActionListener,
     DocumentListener, ItemListener, MyCustomListeners {
         
     private Desktop desktop;
@@ -54,8 +54,6 @@ public class MainWindow implements ActionListener,
 
 	public static boolean isTracking = false;
 	public static boolean multiLineAutosave = true;
-
-	private JFrame mainFrame = new JFrame("Clipboard to Txt Complier");
 
 	// Panels
 	private JPanel topPanel = new JPanel();
@@ -99,12 +97,13 @@ public class MainWindow implements ActionListener,
 		console.setText(currentText);
 	}
 
-	public MainWindow() {
+	public MainWindow(String title) {
+        setTitle(title);
+		ImageIcon icon = new ImageIcon(getClass().getResource("../images/clipboard.png"));
+		setIconImage(icon.getImage());
+        
 		desktop = Desktop.getDesktop();
 		userPreferences = Preferences.userNodeForPackage(ClipboardToTxt.class);
-		
-		ImageIcon icon = new ImageIcon(getClass().getResource("../images/clipboard.png"));
-		mainFrame.setIconImage(icon.getImage());
 
 		fc = new JFileChooser();
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -122,9 +121,9 @@ public class MainWindow implements ActionListener,
 	}
     // Draws GUI layout of the program
 	private void createLayout() {
-		mainFrame.setSize(640, 480);
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.addWindowListener(new WindowListener() {
+		setSize(640, 480);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		addWindowListener(new WindowListener() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				System.out.println("Closing window, saving constants...");
@@ -284,13 +283,13 @@ public class MainWindow implements ActionListener,
 		bottomPanel.add(consoleScroll);
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
-		mainFrame.add(topPanel, BorderLayout.NORTH);
-		mainFrame.add(centerPanel, BorderLayout.CENTER);
-		mainFrame.add(bottomPanel, BorderLayout.SOUTH);
-		mainFrame.setLocationRelativeTo(null);
-		mainFrame.pack();
-		mainFrame.setMinimumSize(mainFrame.getSize());
-		mainFrame.setVisible(true);
+		add(topPanel, BorderLayout.NORTH);
+		add(centerPanel, BorderLayout.CENTER);
+		add(bottomPanel, BorderLayout.SOUTH);
+		setLocationRelativeTo(null);
+		pack();
+		setMinimumSize(getSize());
+		setVisible(true);
 	}
 
 	// Attachs the corresponding listeners to the ui elements
@@ -415,7 +414,7 @@ public class MainWindow implements ActionListener,
 			consoleLog("Stop tracking clipboard changes...");
 
 		} else if (command.equals("Choose File")) {
-			int returnVal = fc.showOpenDialog(mainFrame);
+			int returnVal = fc.showOpenDialog(this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFile();
 				outputFolderTextField.setText(file.getPath());
@@ -461,7 +460,7 @@ public class MainWindow implements ActionListener,
 			}
 
 			Object inputDialogResult = JOptionPane.showInputDialog(
-					mainFrame,
+					this,
 					"New file name: ",
 					"Rename File",
 					JOptionPane.PLAIN_MESSAGE,
