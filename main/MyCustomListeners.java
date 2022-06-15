@@ -1,3 +1,4 @@
+package main;
 interface MyCustomListeners {
 	void onClipBoardUpdate(String data);
 	
