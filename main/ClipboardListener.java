@@ -34,7 +34,7 @@ class BoardListener extends Thread implements ClipboardOwner {
 	
 	void processContents(Transferable t) {
 		try {
-			if (ClipboardToTxt.isTracking) {
+			if (MainWindow.isTracking) {
 				String data = (String) Toolkit.getDefaultToolkit()
 					.getSystemClipboard().getData(DataFlavor.stringFlavor); 
 				

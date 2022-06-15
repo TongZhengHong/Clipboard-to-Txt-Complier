@@ -18,13 +18,13 @@ class IntegerFilter extends DocumentFilter {
             int number = Integer.parseInt(text);
             if (setLimit && (number < 0 || number > 10)) {
                 System.out.println("Please enter number from 0 to 10!");
-                ClipboardToTxt.consoleLog("Please enter number from 0 to 10!");
+                MainWindow.consoleLog("Please enter number from 0 to 10!");
                 return false;
             }
             return true;
         } catch (NumberFormatException e) {
             System.out.println("Invalid input! Please enter a number");
-            ClipboardToTxt.consoleLog("Invalid input! Please enter a number");
+            MainWindow.consoleLog("Invalid input! Please enter a number");
             return false;
         }
     }

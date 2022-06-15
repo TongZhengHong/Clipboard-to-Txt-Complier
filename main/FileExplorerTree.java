@@ -23,7 +23,7 @@ class FileExplorerTree extends JScrollPane implements TreeSelectionListener {
 	public FileExplorerTree() {
 		fileSystemView = FileSystemView.getFileSystemView();
 		File[] root = fileSystemView.getRoots();
-        ClipboardToTxt.currentDirectory = root[0];
+        MainWindow.currentDirectory = root[0];
 		buildTree(root, false);
 	}
 
@@ -130,12 +130,12 @@ class FileExplorerTree extends JScrollPane implements TreeSelectionListener {
 				listener.onTreeFolderClick(file.getAbsolutePath());
 			}
             
-			ClipboardToTxt.selectedFile = null;
-            ClipboardToTxt.currentDirectory = file;
-            ClipboardToTxt.parentDirectory = file.getParentFile();
+			MainWindow.selectedFile = null;
+            MainWindow.currentDirectory = file;
+            MainWindow.parentDirectory = file.getParentFile();
 			
 		} else if (file.isFile()) {
-			ClipboardToTxt.selectedFile = file;
+			MainWindow.selectedFile = file;
 		}
 	}
 }
