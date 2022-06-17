@@ -10,7 +10,7 @@ import javax.swing.tree.*;
 import javax.swing.event.*;
 import javax.swing.filechooser.*;
 
-class FileExplorerTree extends JScrollPane implements TreeSelectionListener {
+class FileBrowser extends JScrollPane implements TreeSelectionListener {
 	private JTree tree;
 	private FileSystemView fileSystemView;
 	
@@ -20,14 +20,14 @@ class FileExplorerTree extends JScrollPane implements TreeSelectionListener {
 		listeners.add(listener);
 	}
 	
-	public FileExplorerTree() {
+	public FileBrowser() {
 		fileSystemView = FileSystemView.getFileSystemView();
 		File[] root = fileSystemView.getRoots();
         MainWindow.currentDirectory = root[0];
 		buildTree(root, false);
 	}
 
-    public FileExplorerTree(String path) {
+    public FileBrowser(String path) {
 		fileSystemView = FileSystemView.getFileSystemView();
         buildTreeFromPath(path);
     }
