@@ -1,6 +1,5 @@
-package main;
+package main.views;
 import java.io.*;
-import java.awt.*;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -8,9 +7,12 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.tree.*;
 import javax.swing.event.*;
-import javax.swing.filechooser.*;
+import javax.swing.filechooser.FileSystemView;
 
-class FileBrowser extends JScrollPane implements TreeSelectionListener {
+import main.MainWindow;
+import main.listeners.MyCustomListeners;
+
+public class FileBrowser extends JScrollPane implements TreeSelectionListener {
 	private JTree tree;
 	private FileSystemView fileSystemView;
 	
@@ -77,7 +79,7 @@ class FileBrowser extends JScrollPane implements TreeSelectionListener {
 		tree.setVisibleRowCount(15);
 		
 		tree.addTreeSelectionListener(this);
-		tree.setCellRenderer(new FileTreeCellRenderer());
+		tree.setCellRenderer(new FileItemRenderer());
 		tree.expandRow(0);
 		
 		this.setViewportView(tree);
@@ -138,42 +140,4 @@ class FileBrowser extends JScrollPane implements TreeSelectionListener {
 			MainWindow.selectedFile = file;
 		}
 	}
-}
-
-class FileTreeCellRenderer extends DefaultTreeCellRenderer {
-    private FileSystemView fileSystemView;
-    private JLabel label;
-
-    FileTreeCellRenderer() {
-        label = new JLabel();
-        label.setOpaque(true);
-        fileSystemView = FileSystemView.getFileSystemView();
-    }
-
-    @Override
-    public Component getTreeCellRendererComponent(
-        JTree tree,
-        Object value,
-        boolean selected,
-        boolean expanded,
-        boolean leaf,
-        int row,
-        boolean hasFocus) {
-
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
-        File file = (File) node.getUserObject();
-        label.setIcon(fileSystemView.getSystemIcon(file));
-        label.setText(fileSystemView.getSystemDisplayName(file));
-        label.setToolTipText(file.getPath());
-
-        if (selected) {
-            label.setBackground(backgroundSelectionColor);
-            label.setForeground(textSelectionColor);
-        } else {
-            label.setBackground(backgroundNonSelectionColor);
-            label.setForeground(textNonSelectionColor);
-        }
-
-        return label;
-    }
 }
