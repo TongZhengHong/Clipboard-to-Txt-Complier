@@ -9,7 +9,6 @@ import javax.swing.tree.*;
 import javax.swing.event.*;
 import javax.swing.filechooser.FileSystemView;
 
-import main.MainWindow;
 import main.listeners.MyCustomListeners;
 
 public class FileBrowser extends JScrollPane implements TreeSelectionListener {
@@ -20,13 +19,6 @@ public class FileBrowser extends JScrollPane implements TreeSelectionListener {
 	
 	public void addTreeListener(MyCustomListeners listener) {
 		listeners.add(listener);
-	}
-	
-	public FileBrowser() {
-		fileSystemView = FileSystemView.getFileSystemView();
-		File[] root = fileSystemView.getRoots();
-        MainWindow.currentDirectory = root[0];
-		buildTree(root, false);
 	}
 
     public FileBrowser(String path) {
@@ -54,23 +46,23 @@ public class FileBrowser extends JScrollPane implements TreeSelectionListener {
 
 			File[] files = fileSystemView.getFiles(fileSystemRoot, true);
 
-            boolean hasDirectory = false;
-            List<File> justFiles = new ArrayList<File>();
+            List<File> filesList = new ArrayList<File>();
+            List<File> foldersList = new ArrayList<File>();
 			for (File file : files) {
 				if (file.isDirectory()) {
-                    hasDirectory = true;
-					node.add(new DefaultMutableTreeNode(file));
-					
+                    foldersList.add(file);
 				} else if (file.isFile()) {
-                    justFiles.add(file);
+                    filesList.add(file);
 				}
 			}
+            
+            //Show folders first before files
+            for (File folder : foldersList) {
+                node.add(new DefaultMutableTreeNode(folder));
+            }
 
-            // Show files after folders are added
-            if (!hasDirectory) {
-                for (File file : justFiles) {
-                    node.add(new DefaultMutableTreeNode(file));
-                }
+            for (File file : filesList) {
+                node.add(new DefaultMutableTreeNode(file));
             }
 		}
 
@@ -85,59 +77,19 @@ public class FileBrowser extends JScrollPane implements TreeSelectionListener {
 		this.setViewportView(tree);
 	}
 	
-	private void showChildren(final DefaultMutableTreeNode node) {
-        tree.setEnabled(false);
-
-        SwingWorker<Void, File> worker = new SwingWorker<Void, File>() {
-            @Override
-            public Void doInBackground() {
-                File file = (File) node.getUserObject();
-                if (file.isDirectory()) {
-                    File[] files = fileSystemView.getFiles(file, true); //!!
-                    if (node.isLeaf()) {
-                        for (File child : files) {
-							publish(child);
-                        }
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            protected void process(List<File> chunks) {
-                for (File child : chunks) {
-                    node.add(new DefaultMutableTreeNode(child));
-                }
-            }
-
-            @Override
-            protected void done() {
-                tree.setEnabled(true);
-            }
-        };
-		
-        worker.execute();
-    }
-	
+    @Override
 	public void valueChanged(TreeSelectionEvent tse){
 		DefaultMutableTreeNode node =
 			(DefaultMutableTreeNode) tse.getPath().getLastPathComponent();
 			
 		File file = (File) node.getUserObject();
-		if (file.isDirectory()) {
-			showChildren(node);
-			
-            // Update ui to show that folder as root
-			for(MyCustomListeners listener : listeners){
-				listener.onTreeFolderClick(file.getAbsolutePath());
-			}
-            
-			MainWindow.selectedFile = null;
-            MainWindow.currentDirectory = file;
-            MainWindow.parentDirectory = file.getParentFile();
-			
-		} else if (file.isFile()) {
-			MainWindow.selectedFile = file;
-		}
+        // Update ui to show that folder as root
+        for(MyCustomListeners listener : listeners){
+            if (file.isDirectory()) {
+                listener.onFileBrowserFolderClick(file.getAbsolutePath());
+            } else if (file.isFile()) {
+                listener.onFileBrowserItemClick(file);
+            }
+        }
 	}
 }
