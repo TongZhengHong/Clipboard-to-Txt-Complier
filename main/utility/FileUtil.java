@@ -14,8 +14,9 @@ import java.nio.file.Paths;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-public class FileUtil {
+import main.MainWindow;
 
+public class FileUtil {
     private static Desktop desktop = Desktop.getDesktop();
     private static JFileChooser fileChooser = new JFileChooser();
 
@@ -31,20 +32,21 @@ public class FileUtil {
         return null;
     }
 
-    public static boolean showFileExplorer(File currentDirectory) {
+    public static void showFileExplorer(File currentDirectory) {
+        if (currentDirectory == null || !currentDirectory.exists())
+            return;
         try {
             desktop.open(currentDirectory);
-            return true;
-
         } catch (IOException e1) {
             System.out.println("Error opening directory: " + currentDirectory.getAbsolutePath());
-            return false;
+            MainWindow.consoleLog("Error opening directory: " + currentDirectory.getAbsolutePath());
         }
     }
 
-    public static void openFile(File selectedFile) {
-        if (selectedFile == null) {
+    public static void open(File selectedFile) {
+        if (selectedFile == null || !selectedFile.exists()) {
             System.out.println("Please select a file to open!");
+            MainWindow.consoleLog("Please select a file to open!");
             return;
         }
 
@@ -57,27 +59,24 @@ public class FileUtil {
                 try {
                     desktop.open(selectedFile);
                     System.out.println("Opening: " + fileName);
+                    MainWindow.consoleLog("Opening: " + fileName);
 
                 } catch (IOException err) {
                     err.printStackTrace();
+                    MainWindow.consoleLog("Error occured while opening: " + fileName);
                 }
             } else {
                 System.out.println("Only allowed to open text (.txt) files!");
+                MainWindow.consoleLog("Only allowed to open text (.txt) files!");
             }
         }
     }
 
-    public enum RenameFileResult {
-        FILE_DOESNT_EXIST,
-        SUCCESS,
-        ERROR,
-        CANCEL,
-    }
-
-    public static RenameFileResult renameFile(Component context, File selectedFile) {
+    public static boolean rename(Component context, File selectedFile) {
         if (selectedFile == null || !selectedFile.exists()) {
             System.out.println("Please select a file to rename!");
-            return RenameFileResult.FILE_DOESNT_EXIST;
+            MainWindow.consoleLog("Please select a file to rename!");
+            return false;
         }
 
         Object inputDialogResult = JOptionPane.showInputDialog(
@@ -91,11 +90,13 @@ public class FileUtil {
 
         // Cancel button is clicked
         if (inputDialogResult == null)
-            return RenameFileResult.CANCEL;
+            return false;
+
         String renamedString = inputDialogResult.toString();
 
         if (renamedString.isEmpty() || renamedString.equals(selectedFile.getName()))
-            return RenameFileResult.CANCEL;
+            return false;
+
         if (!renamedString.contains(".txt"))
             renamedString += ".txt";
 
@@ -103,36 +104,34 @@ public class FileUtil {
         try {
             Files.move(source, source.resolveSibling(renamedString));
             System.out.println("Successfully renamed file to : " + renamedString);
-            return RenameFileResult.SUCCESS;
+            MainWindow.consoleLog("Successfully renamed file to : " + renamedString);
+            return true;
 
         } catch (IOException e1) {
             System.out.println("Error renaming file to : " + renamedString);
-            return RenameFileResult.ERROR;
+            MainWindow.consoleLog("Error renaming file to : " + renamedString);
         }
+
+        return false;
     }
 
-    public enum SaveFileResult {
-        FILE_EMPTY,
-        FILE_EXISTS,
-        SUCCESS,
-        IO_ERROR,
-        FILE_NOT_FOUND
-    }
-
-    public static SaveFileResult saveFile(String fileDirectory, String fileName, String content) {
+    public static boolean save(String fileDirectory, String fileName, String currentText) {
         // Don't save if directory or file name is empty
 		if (fileDirectory.isEmpty() || fileName.isEmpty()) {
 			System.out.println("Error! Empty file name or directory. Please enter name or folder");
-			return SaveFileResult.FILE_EMPTY;
+            MainWindow.consoleLog("Error! Empty file name or directory. Please enter name or folder");
+			return false;
 		}
 
+        fileName = fileName.trim();
 		String fileString = fileDirectory + "\\" + fileName + ".txt";
 		File tempFile = new File(fileString);
 
 		// Don't save if current file path exists
 		if (tempFile.exists()) {
 			System.out.println("Error! File already exists. Please change file name or directory");
-			return SaveFileResult.FILE_EXISTS;
+            MainWindow.consoleLog("Error! File already exists. Please change file name or directory");
+			return false;
 		}
 
 		String newLine = System.getProperty("line.separator");
@@ -140,7 +139,7 @@ public class FileUtil {
 			// Write contents to new file
             FileWriter fileWriter = new FileWriter(fileString, false);
 			BufferedWriter outWriter = new BufferedWriter(fileWriter);
-			String[] sentences = content.split("\\n");
+			String[] sentences = currentText.split("\\n");
 			for (String line : sentences) {
 				outWriter.write(line);
 				outWriter.write(newLine);
@@ -148,24 +147,18 @@ public class FileUtil {
 			outWriter.close();
 
 			System.out.println("Successfully saved file as " + fileString);
-
-			// Reset current file text
-			currentFileTextArea.setText("");
-
-			// Update file explorer to show new file
-			updateFileExplorerTree();
-
-			
-
-            return SaveFileResult.SUCCESS;
+            MainWindow.consoleLog("Successfully saved file as " + fileString);
+            return true;
 
 		} catch (FileNotFoundException e) {
 			System.out.println("Error with output folder: " + fileString);
-            return SaveFileResult.FILE_NOT_FOUND;
+            MainWindow.consoleLog("Error with output folder: " + fileString);
 
 		} catch (IOException e) {
 			e.printStackTrace();
-            return SaveFileResult.IO_ERROR;
+            MainWindow.consoleLog("Error writing to file: " + fileString);
 		}
+
+        return false;
     }
 }
