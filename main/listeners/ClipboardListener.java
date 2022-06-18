@@ -1,11 +1,15 @@
-package main;
+package main.listeners;
+
 import java.util.List;
 import java.util.ArrayList;
 
-import java.awt.*;
-import java.awt.datatransfer.*;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 
-class BoardListener extends Thread implements ClipboardOwner {
+public class ClipboardListener extends Thread implements ClipboardOwner {
 	private String previousClipBoard = "";
 	private List<MyCustomListeners> listeners = new ArrayList<MyCustomListeners>();
 	private Clipboard sysClip = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -21,8 +25,9 @@ class BoardListener extends Thread implements ClipboardOwner {
 	}
   
 	public void lostOwnership(Clipboard c, Transferable t) {
-		try { //Add delay to prevent exception
-			Thread.sleep(400);
+		try { 
+			//Add delay to prevent exception
+			Thread.sleep(300);
 			
 		} catch (Exception e) {
 			System.out.println("Exception: " + e);
@@ -34,19 +39,17 @@ class BoardListener extends Thread implements ClipboardOwner {
 	
 	void processContents(Transferable t) {
 		try {
-			if (MainWindow.isTracking) {
-				String data = (String) Toolkit.getDefaultToolkit()
-					.getSystemClipboard().getData(DataFlavor.stringFlavor); 
-				
-				// Only update if clipboard content changes
-				if (!data.equals(previousClipBoard)) {
-					for(MyCustomListeners listener : listeners){
-						listener.onClipBoardUpdate(data);
-					}
+			String data = (String) Toolkit.getDefaultToolkit()
+				.getSystemClipboard().getData(DataFlavor.stringFlavor); 
+			
+			// Only update if clipboard content changes
+			if (!data.equals(previousClipBoard)) {
+				for(MyCustomListeners listener : listeners){
+					listener.onClipboardUpdate(data);
 				}
-				
-				previousClipBoard = data;
 			}
+			
+			previousClipBoard = data;
 
 		} catch (Exception e) {
 			System.out.println("Exception: " + e); 

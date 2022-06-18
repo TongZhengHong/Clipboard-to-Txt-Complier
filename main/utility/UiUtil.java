@@ -86,6 +86,9 @@ public class UiUtil {
 	}
 
     public void handleClipboardUpdate(String clipboardText) {
+        // Do not handle clipboard changes if NOT tracking
+        if (!state.isTracking) return;
+
         String currentText = mainWindow.currentFileTextArea.getText();
 
 		if (currentText.isEmpty())
