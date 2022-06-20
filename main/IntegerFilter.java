@@ -5,18 +5,18 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
 
-class IntegerFilter extends DocumentFilter {
-    private boolean setLimit;
+public class IntegerFilter extends DocumentFilter {
+    private boolean shouldLimit;
 
-    public IntegerFilter(boolean limit) {
-        this.setLimit = limit;
+    public IntegerFilter(boolean shouldLimit) {
+        this.shouldLimit = shouldLimit;
     }
 
     private boolean test(String text) {
         if (text.isEmpty()) return true;
         try {
             int number = Integer.parseInt(text);
-            if (setLimit && (number < 0 || number > 10)) {
+            if (shouldLimit && (number < 0 || number > 10)) {
                 System.out.println("Please enter number from 0 to 10!");
                 MainWindow.consoleLog("Please enter number from 0 to 10!");
                 return false;

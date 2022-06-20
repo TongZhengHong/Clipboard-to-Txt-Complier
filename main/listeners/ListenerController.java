@@ -73,6 +73,9 @@ DocumentListener, ItemListener, MyCustomListeners {
 		mainWindow.backButton.setActionCommand("Back");
 		mainWindow.backButton.addActionListener(this);
 
+		mainWindow.refreshButton.setActionCommand("Refresh");
+		mainWindow.refreshButton.addActionListener(this);
+
 		mainWindow.openButton.setMnemonic(KeyEvent.VK_O);
 		mainWindow.openButton.setActionCommand("Open File");
 		mainWindow.openButton.addActionListener(this);
@@ -85,8 +88,11 @@ DocumentListener, ItemListener, MyCustomListeners {
 		mainWindow.showExplorerButton.setActionCommand("Show Explorer");
 		mainWindow.showExplorerButton.addActionListener(this);
 
-		//Add accelerator for save button
 		mainWindow.saveButton.setToolTipText("Save file (Ctrl+S)");
+		mainWindow.saveButton.setActionCommand("Save File");
+		mainWindow.saveButton.addActionListener(this);
+
+		//Add accelerator for save button
 		KeyStroke keySave = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK); 
 		Action performSave = new AbstractAction("Save") {  
 			public void actionPerformed(ActionEvent e) {
@@ -155,6 +161,9 @@ DocumentListener, ItemListener, MyCustomListeners {
 				return;
 			mainWindow.outputFolderTextField.setText(state.parentDirectory.getAbsolutePath());
 
+		} else if (command.equals("Refresh")) {
+			uiUtil.updateFileBrowser();
+
 		} else if (command.equals("Show Explorer")) {
 			FileUtil.showFileExplorer(state.currentDirectory);
 
@@ -163,6 +172,9 @@ DocumentListener, ItemListener, MyCustomListeners {
 
 		} else if (command.equals("Rename File")) {
 			uiUtil.renameFile();
+
+		} else if (command.equals("Save File")) {
+			uiUtil.saveFile();
 		}
 	}
 

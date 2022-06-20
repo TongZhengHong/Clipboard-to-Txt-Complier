@@ -36,6 +36,7 @@ public class MainWindow extends JFrame implements WindowListener {
 
 	// Center section
 	public JButton backButton = new JButton("Back");
+	public JButton refreshButton = new JButton("Refresh");
 	public JButton openButton = new JButton("Open");
 	public JButton renameButton = new JButton("Rename");
 	public JButton showExplorerButton = new JButton("Show in Explorer");
@@ -57,33 +58,34 @@ public class MainWindow extends JFrame implements WindowListener {
 	public JTextField trailingTextField = new JTextField();
 	public JTextField fileNameTextField = new JTextField();
 
-    private ComplierState state;
+	private ComplierState state;
 
 	public MainWindow(String title) {
-        setTitle(title);
+		setTitle(title);
 		ImageIcon icon = new ImageIcon(getClass().getResource("../images/clipboard.png"));
 		setIconImage(icon.getImage());
 
-        FileSystemView sys = FileSystemView.getFileSystemView();
+		FileSystemView sys = FileSystemView.getFileSystemView();
 		File[] root = sys.getRoots();
-        fileBrowser = new FileBrowser(root[0].getAbsolutePath());
+		fileBrowser = new FileBrowser(root[0].getAbsolutePath());
 
-        state = new ComplierState();
-        state.currentDirectory = root[0];
+		state = new ComplierState();
+		state.currentDirectory = root[0];
 
 		PreferenceUtil.loadPreferences(this, state);
-        
+
 		UiUtil uiUtil = new UiUtil(this, state);
-        new ListenerController(this, state, uiUtil);
+		new ListenerController(this, state, uiUtil);
 
 		createLayout();
 	}
 
-    /**
-     * Logs new [text] in bottom console section
-     * @param text
-     */
-    public static void consoleLog(String text) {
+	/**
+	 * Logs new [text] in bottom console section
+	 * 
+	 * @param text
+	 */
+	public static void consoleLog(String text) {
 		String currentText = console.getText();
 
 		if (currentText.isEmpty())
@@ -91,10 +93,10 @@ public class MainWindow extends JFrame implements WindowListener {
 		else
 			currentText += "\n" + text;
 
-        console.setText(currentText);
+		console.setText(currentText);
 	}
 
-    // Draws GUI layout of the program
+	// Draws GUI layout of the program
 	private void createLayout() {
 		setSize(640, 480);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -102,7 +104,7 @@ public class MainWindow extends JFrame implements WindowListener {
 
 		JPanel topPanel = createTopSection();
 		JPanel centerPanel = createCenterSection();
-        JPanel bottomPanel = createBottomSection();
+		JPanel bottomPanel = createBottomSection();
 
 		add(topPanel, BorderLayout.NORTH);
 		add(centerPanel, BorderLayout.CENTER);
@@ -112,12 +114,12 @@ public class MainWindow extends JFrame implements WindowListener {
 		setMinimumSize(getSize());
 		setVisible(true);
 	}
-    
-    // ==========================================================================================
-    // TOP Panel
-    // ==========================================================================================
-    private JPanel createTopSection() {
-        JPanel topPanel = new JPanel();
+
+	// ==========================================================================================
+	// TOP Panel
+	// ==========================================================================================
+	private JPanel createTopSection() {
+		JPanel topPanel = new JPanel();
 
 		JLabel leadingZerosLabel = new JLabel("Leading Zeros: ");
 		JPanel statusPanel = new JPanel();
@@ -164,41 +166,42 @@ public class MainWindow extends JFrame implements WindowListener {
 		topPanel.add(textFileNamePanel);
 		topPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10));
 
-        return topPanel;
-    }
+		return topPanel;
+	}
 
-    // ==========================================================================================
-    // CENTER Panel
-    // ==========================================================================================
-    private JPanel createCenterSection() {
-        JPanel centerPanel = new JPanel();
+	// ==========================================================================================
+	// CENTER Panel
+	// ==========================================================================================
+	private JPanel createCenterSection() {
+		JPanel centerPanel = new JPanel();
 
-		JPanel fileExplorerPanel = new JPanel();
+		JPanel fileBrowserPanel = new JPanel();
 		JPanel fileControlPanel = new JPanel();
 
 		JPanel clipboardPanel = new JPanel();
 		JPanel currentFilePanel = new JPanel();
 
-		fileControlPanel.setLayout(new GridLayout(1, 3));
+		fileControlPanel.setLayout(new GridLayout(2, 2));
 		fileControlPanel.setMaximumSize(new Dimension(
 				fileControlPanel.getMaximumSize().width,
 				fileControlPanel.getMinimumSize().height));
 
-		fileExplorerPanel.setLayout(new BoxLayout(fileExplorerPanel, BoxLayout.Y_AXIS));
+		fileBrowserPanel.setLayout(new BoxLayout(fileBrowserPanel, BoxLayout.Y_AXIS));
 		clipboardPanel.setLayout(new BoxLayout(clipboardPanel, BoxLayout.Y_AXIS));
 		currentFilePanel.setLayout(new BoxLayout(currentFilePanel, BoxLayout.Y_AXIS));
 
-		fileExplorerPanel.setBorder(BorderFactory.createTitledBorder("Current Folder"));
+		fileBrowserPanel.setBorder(BorderFactory.createTitledBorder("Current Folder"));
 		clipboardPanel.setBorder(BorderFactory.createTitledBorder("Clipboard"));
 		currentFilePanel.setBorder(BorderFactory.createTitledBorder("Current Text File"));
 
 		fileControlPanel.add(backButton);
+		fileControlPanel.add(refreshButton);
 		fileControlPanel.add(renameButton);
 		fileControlPanel.add(openButton);
 
-		fileExplorerPanel.add(fileControlPanel);
-		fileExplorerPanel.add(fileBrowser);
-		fileExplorerPanel.add(showExplorerButton);
+		fileBrowserPanel.add(fileControlPanel);
+		fileBrowserPanel.add(fileBrowser);
+		fileBrowserPanel.add(showExplorerButton);
 
 		JPanel tempPanel = new JPanel();
 		tempPanel.setLayout(new GridLayout(1, 1));
@@ -207,28 +210,28 @@ public class MainWindow extends JFrame implements WindowListener {
 		tempPanel.setMaximumSize(new Dimension(
 				tempPanel.getMaximumSize().width,
 				tempPanel.getMinimumSize().height));
-		fileExplorerPanel.add(tempPanel);
-		
+		fileBrowserPanel.add(tempPanel);
+
 		JScrollPane clipboardScrollPane = new JScrollPane(clipBoardTextArea);
 		clipboardPanel.add(clipboardScrollPane);
-		
+
 		JScrollPane currentFileScrollPane = new JScrollPane(currentFileTextArea);
 		currentFilePanel.add(currentFileScrollPane);
 
 		centerPanel.setLayout(new GridLayout(1, 3));
-		centerPanel.add(fileExplorerPanel);
+		centerPanel.add(fileBrowserPanel);
 		centerPanel.add(clipboardPanel);
 		centerPanel.add(currentFilePanel);
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
-        return centerPanel;
-    }
+		return centerPanel;
+	}
 
-    // ==========================================================================================
+	// ==========================================================================================
 	// BOTTOM Panel
 	// ==========================================================================================
-    private JPanel createBottomSection() {
-        JPanel bottomPanel = new JPanel();
+	private JPanel createBottomSection() {
+		JPanel bottomPanel = new JPanel();
 
 		JPanel bottomRow = new JPanel();
 		JLabel fileNameLabel = new JLabel("File Name: ");
@@ -251,34 +254,35 @@ public class MainWindow extends JFrame implements WindowListener {
 		bottomPanel.add(consoleScroll);
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
-        return bottomPanel;
-    }
+		return bottomPanel;
+	}
 
-    @Override
-    public void windowClosing(WindowEvent e) {
-        PreferenceUtil.saveAllPreferences(this, state);
-    }
+	@Override
+	public void windowClosing(WindowEvent e) {
+		PreferenceUtil.saveAllPreferences(this, state);
+	}
 
-    @Override
-    public void windowOpened(WindowEvent e) {
-    }
-    @Override
-    public void windowClosed(WindowEvent e) {
-    }
+	@Override
+	public void windowOpened(WindowEvent e) {
+	}
 
-    @Override
-    public void windowIconified(WindowEvent e) {
-    }
+	@Override
+	public void windowClosed(WindowEvent e) {
+	}
 
-    @Override
-    public void windowDeiconified(WindowEvent e) {
-    }
+	@Override
+	public void windowIconified(WindowEvent e) {
+	}
 
-    @Override
-    public void windowActivated(WindowEvent e) {
-    }
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+	}
 
-    @Override
-    public void windowDeactivated(WindowEvent e) {
-    }
+	@Override
+	public void windowActivated(WindowEvent e) {
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+	}
 }
