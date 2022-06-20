@@ -2,10 +2,16 @@ package main.listeners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultCaret;
@@ -55,26 +61,40 @@ DocumentListener, ItemListener, MyCustomListeners {
 			}
 		});
 
+		mainWindow.startStopButton.setMnemonic(KeyEvent.VK_S);
 		mainWindow.startStopButton.setActionCommand("Start");
 		mainWindow.startStopButton.addActionListener(this);
 
+		mainWindow.fileChooserButton.setMnemonic(KeyEvent.VK_C);
 		mainWindow.fileChooserButton.setActionCommand("Choose Folder");
 		mainWindow.fileChooserButton.addActionListener(this);
 
+		mainWindow.backButton.setMnemonic(KeyEvent.VK_B);
 		mainWindow.backButton.setActionCommand("Back");
 		mainWindow.backButton.addActionListener(this);
 
+		mainWindow.openButton.setMnemonic(KeyEvent.VK_O);
 		mainWindow.openButton.setActionCommand("Open File");
 		mainWindow.openButton.addActionListener(this);
 
+		mainWindow.renameButton.setMnemonic(KeyEvent.VK_R);
 		mainWindow.renameButton.setActionCommand("Rename File");
 		mainWindow.renameButton.addActionListener(this);
 
+		mainWindow.showExplorerButton.setMnemonic(KeyEvent.VK_E);
 		mainWindow.showExplorerButton.setActionCommand("Show Explorer");
 		mainWindow.showExplorerButton.addActionListener(this);
 
-		mainWindow.saveButton.setActionCommand("Save");
-		mainWindow.saveButton.addActionListener(this);
+		//Add accelerator for save button
+		mainWindow.saveButton.setToolTipText("Save file (Ctrl+S)");
+		KeyStroke keySave = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK); 
+		Action performSave = new AbstractAction("Save") {  
+			public void actionPerformed(ActionEvent e) {
+				uiUtil.saveFile();
+			}
+		};
+		mainWindow.saveButton.getActionMap().put("performSave", performSave);
+		mainWindow.saveButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keySave, "performSave"); 
 
         mainWindow.leadingTextField.getDocument().addDocumentListener(this);
 		mainWindow.numberTextField.getDocument().addDocumentListener(this);
@@ -143,9 +163,6 @@ DocumentListener, ItemListener, MyCustomListeners {
 
 		} else if (command.equals("Rename File")) {
 			uiUtil.renameFile();
-
-		} else if (command.equals("Save")) {
-			uiUtil.saveFile();
 		}
 	}
 
