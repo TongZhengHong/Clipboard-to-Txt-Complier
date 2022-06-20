@@ -26,7 +26,6 @@ public class UiUtil {
                 int number = Integer.valueOf(mainWindow.numberTextField.getText());
                 number++;
                 mainWindow.numberTextField.setText(Integer.toString(number));
-                updateFileNameTextField();
 
             } catch (NumberFormatException error) {
                 error.printStackTrace();
@@ -43,7 +42,11 @@ public class UiUtil {
         String number = mainWindow.numberTextField.getText().trim();
 		String limit = mainWindow.leadingZerosTextField.getText().trim();
 
-		if (!limit.equals("") && !limit.equals("0")) {
+        boolean isNumberEmpty = number.isEmpty();
+        boolean isLimitEmpty = limit.equals("");
+        boolean isLimitZero = limit.equals("0");
+
+		if (!isNumberEmpty && !isLimitEmpty && !isLimitZero) {
 			try {
 				int limitInt = Integer.valueOf(limit);
 				int numberInt = Integer.valueOf(number);
