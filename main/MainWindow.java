@@ -43,10 +43,11 @@ public class MainWindow extends JFrame implements WindowListener {
 	public JButton duplicateClipboardButton = new JButton("Duplicate Clipboard");
 
 	public FileBrowser fileBrowser;
-	public JTextArea clipBoardTextArea = new JTextArea();
+	public JTextArea fileViewerTextArea = new JTextArea();
 	public JTextArea currentFileTextArea = new JTextArea();
 
 	// Bottom section
+	public JTextArea clipboardTextArea = new JTextArea(2, 50);
 	public JCheckBox autoSaveCheckBox = new JCheckBox("Auto save file if clipboard has multiple lines");
 	public JButton saveButton = new JButton("Save Manually");
 	public static JTextArea console = new JTextArea(4, 50);
@@ -192,7 +193,7 @@ public class MainWindow extends JFrame implements WindowListener {
 		currentFilePanel.setLayout(new BoxLayout(currentFilePanel, BoxLayout.Y_AXIS));
 
 		fileBrowserPanel.setBorder(BorderFactory.createTitledBorder("Current Folder"));
-		clipboardPanel.setBorder(BorderFactory.createTitledBorder("Clipboard"));
+		clipboardPanel.setBorder(BorderFactory.createTitledBorder("File Viewer"));
 		currentFilePanel.setBorder(BorderFactory.createTitledBorder("Current Text File"));
 
 		fileControlPanel.add(backButton);
@@ -213,8 +214,8 @@ public class MainWindow extends JFrame implements WindowListener {
 				tempPanel.getMinimumSize().height));
 		fileBrowserPanel.add(tempPanel);
 
-		JScrollPane clipboardScrollPane = new JScrollPane(clipBoardTextArea);
-		clipboardPanel.add(clipboardScrollPane);
+		JScrollPane fileViewerScrollPane = new JScrollPane(fileViewerTextArea);
+		clipboardPanel.add(fileViewerScrollPane);
 
 		JPanel duplicateButtonPanel = new JPanel();
 		duplicateButtonPanel.setLayout(new GridLayout(1, 1));
@@ -245,6 +246,10 @@ public class MainWindow extends JFrame implements WindowListener {
 		JPanel bottomRow = new JPanel();
 		JLabel fileNameLabel = new JLabel("File Name: ");
 
+		JScrollPane clipboardScroll = new JScrollPane();
+		clipboardScroll.add(clipboardTextArea);
+		clipboardScroll.setViewportView(clipboardTextArea);
+
 		bottomRow.setLayout(new BoxLayout(bottomRow, BoxLayout.X_AXIS));
 		bottomRow.add(autoSaveCheckBox);
 		bottomRow.add(Box.createRigidArea(new Dimension(15, 0)));
@@ -258,6 +263,8 @@ public class MainWindow extends JFrame implements WindowListener {
 		consoleScroll.setViewportView(console);
 
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+		bottomPanel.add(clipboardScroll);
+		bottomPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 		bottomPanel.add(bottomRow);
 		bottomPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 		bottomPanel.add(consoleScroll);

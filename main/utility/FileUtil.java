@@ -20,6 +20,28 @@ public class FileUtil {
     private static Desktop desktop = Desktop.getDesktop();
     private static JFileChooser fileChooser = new JFileChooser();
 
+    public static boolean isTxtFile(File file) {
+        String fileName = file.getAbsolutePath();
+            int dotIndex = fileName.lastIndexOf('.');
+            String fileType = (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
+        return fileType.equals("txt");
+    }
+    
+    public static String readTextFile(File selectedFile) {
+        if (!isTxtFile(selectedFile)) return "";
+    
+        Path selectedFilePath = Paths.get(selectedFile.getAbsolutePath());
+        try {
+            String content = new String(Files.readAllBytes(selectedFilePath));
+            return content;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            MainWindow.consoleLog("Error reading file: " + selectedFile);
+            return "";
+        }
+    }
+
     public static String chooseFolder(Component context) {
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
@@ -51,11 +73,8 @@ public class FileUtil {
         }
 
         String fileName = selectedFile.getAbsolutePath();
-        int dotIndex = fileName.lastIndexOf('.');
-        String fileType = (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
-
         if (desktop.isSupported(Desktop.Action.OPEN)) {
-            if (fileType.equals("txt")) {
+            if (isTxtFile(selectedFile)) {
                 try {
                     desktop.open(selectedFile);
                     System.out.println("Opening: " + fileName);
@@ -76,6 +95,12 @@ public class FileUtil {
         if (selectedFile == null || !selectedFile.exists()) {
             System.out.println("Please select a file to rename!");
             MainWindow.consoleLog("Please select a file to rename!");
+            return false;
+        }
+
+        if (!isTxtFile(selectedFile)) {
+            System.out.println("Only allowed to rename text (.txt) files!");
+            MainWindow.consoleLog("Only allowed to rename text (.txt) files!");
             return false;
         }
 
@@ -103,13 +128,13 @@ public class FileUtil {
         Path source = Paths.get(selectedFile.getAbsolutePath());
         try {
             Files.move(source, source.resolveSibling(renamedString));
-            System.out.println("Successfully renamed file to : " + renamedString);
-            MainWindow.consoleLog("Successfully renamed file to : " + renamedString);
+            System.out.println("Successfully renamed file to: " + renamedString);
+            MainWindow.consoleLog("Successfully renamed file to: " + renamedString);
             return true;
 
         } catch (IOException e1) {
-            System.out.println("Error renaming file to : " + renamedString);
-            MainWindow.consoleLog("Error renaming file to : " + renamedString);
+            System.out.println("Error renaming file to: " + renamedString);
+            MainWindow.consoleLog("Error renaming file to: " + renamedString);
         }
 
         return false;
@@ -146,8 +171,8 @@ public class FileUtil {
 			}
 			outWriter.close();
 
-			System.out.println("Successfully saved file as " + fileString);
-            MainWindow.consoleLog("Successfully saved file as " + fileString);
+			System.out.println("Successfully saved file as: " + fileString);
+            MainWindow.consoleLog("Successfully saved file as: " + fileString);
             return true;
 
 		} catch (FileNotFoundException e) {

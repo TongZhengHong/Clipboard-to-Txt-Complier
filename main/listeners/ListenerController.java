@@ -118,7 +118,8 @@ DocumentListener, ItemListener, MyCustomListeners {
 
 		mainWindow.autoSaveCheckBox.addItemListener(this);
 
-		mainWindow.clipBoardTextArea.setEditable(false);
+		mainWindow.fileViewerTextArea.setEditable(false);
+		mainWindow.clipboardTextArea.setEditable(false);
 		MainWindow.console.setEditable(false);
         
 		DefaultCaret consoleCaret = (DefaultCaret) MainWindow.console.getCaret();
@@ -208,12 +209,22 @@ DocumentListener, ItemListener, MyCustomListeners {
 
     @Override
     public void onFileBrowserItemClick(File selectedFile) {
-        state.selectedFile = selectedFile;
+		//Update selectedFile state
+		state.selectedFile = selectedFile;
+		
+		//Check if text file selected and show contents
+		String content = FileUtil.readTextFile(selectedFile);
+		mainWindow.fileViewerTextArea.setText(content);
+		mainWindow.fileViewerTextArea.setCaretPosition(0);
     }
 
     // Updates outputFolderTextField which will update file explorer tree
     @Override
     public void onFileBrowserFolderClick(String path) {
-        mainWindow.outputFolderTextField.setText(path);
+		//Update new folder in fileBrowser
+		mainWindow.outputFolderTextField.setText(path);
+
+		//Reset fileViewer to empty as folder is selected
+		mainWindow.fileViewerTextArea.setText("");
     }
 }

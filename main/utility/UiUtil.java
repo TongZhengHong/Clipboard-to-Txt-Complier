@@ -102,7 +102,7 @@ public class UiUtil {
 			currentText += "\n" + clipboardText;
 
         mainWindow.currentFileTextArea.setText(currentText);
-        mainWindow.clipBoardTextArea.setText(clipboardText);
+        mainWindow.clipboardTextArea.setText(clipboardText);
 
         // Update cursor position to start of last line to show textArea contents
         int lastLineNumber = mainWindow.currentFileTextArea.getLineCount() - 1;
@@ -127,7 +127,7 @@ public class UiUtil {
     }
 
     public void duplicateClipboard() {
-        String previousClipboard = mainWindow.clipBoardTextArea.getText();
+        String previousClipboard = mainWindow.clipboardTextArea.getText();
 
         if (previousClipboard.trim().isEmpty()) {
             System.out.println("Previous clipboard is empty!");
