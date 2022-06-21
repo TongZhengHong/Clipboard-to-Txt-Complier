@@ -88,9 +88,11 @@ public class UiUtil {
 		}
 	}
 
-    public void handleClipboardUpdate(String clipboardText) {
+    private void handleClipboardUpdate(String clipboardText, boolean checkAutoSave) {
         // Do not handle clipboard changes if NOT tracking
         if (!state.isTracking) return;
+
+        state.previousClipboard = clipboardText;
 
         String currentText = mainWindow.currentFileTextArea.getText();
 
@@ -114,9 +116,25 @@ public class UiUtil {
         }
 
 		// Save file if clipboard has multiple lines
-		if (state.multiLineAutosave && clipboardText.contains("\n")) {
-			saveFile();
+		if (checkAutoSave && state.multiLineAutosave) {
+            if (clipboardText.contains("\n"))
+			    saveFile();
 		}
+    }
+
+    public void handleClipboardUpdate(String clipboardText) {
+        handleClipboardUpdate(clipboardText, true);
+    }
+
+    public void duplicateClipboard() {
+        String previousClipboard = mainWindow.clipBoardTextArea.getText();
+
+        if (previousClipboard.trim().isEmpty()) {
+            System.out.println("Previous clipboard is empty!");
+            MainWindow.consoleLog("Previous clipboard is empty!");
+        } else 
+            //Do not check autosave, duplicate previous clipboard even with newline
+            handleClipboardUpdate(state.previousClipboard, false);
     }
 
     public void renameFile() {

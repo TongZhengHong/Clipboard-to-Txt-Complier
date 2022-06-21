@@ -88,6 +88,10 @@ DocumentListener, ItemListener, MyCustomListeners {
 		mainWindow.showExplorerButton.setActionCommand("Show Explorer");
 		mainWindow.showExplorerButton.addActionListener(this);
 
+		mainWindow.duplicateClipboardButton.setMnemonic(KeyEvent.VK_D);
+		mainWindow.duplicateClipboardButton.setActionCommand("Duplicate");
+		mainWindow.duplicateClipboardButton.addActionListener(this);
+
 		mainWindow.saveButton.setToolTipText("Save file (Ctrl+S)");
 		mainWindow.saveButton.setActionCommand("Save File");
 		mainWindow.saveButton.addActionListener(this);
@@ -175,7 +179,11 @@ DocumentListener, ItemListener, MyCustomListeners {
 
 		} else if (command.equals("Save File")) {
 			uiUtil.saveFile();
-		}
+
+		} else if (command.equals("Duplicate")) {
+			uiUtil.duplicateClipboard();
+
+		} 
 	}
 
     @Override

@@ -40,6 +40,7 @@ public class MainWindow extends JFrame implements WindowListener {
 	public JButton openButton = new JButton("Open");
 	public JButton renameButton = new JButton("Rename");
 	public JButton showExplorerButton = new JButton("Show in Explorer");
+	public JButton duplicateClipboardButton = new JButton("Duplicate Clipboard");
 
 	public FileBrowser fileBrowser;
 	public JTextArea clipBoardTextArea = new JTextArea();
@@ -215,8 +216,16 @@ public class MainWindow extends JFrame implements WindowListener {
 		JScrollPane clipboardScrollPane = new JScrollPane(clipBoardTextArea);
 		clipboardPanel.add(clipboardScrollPane);
 
+		JPanel duplicateButtonPanel = new JPanel();
+		duplicateButtonPanel.setLayout(new GridLayout(1, 1));
+		duplicateButtonPanel.add(duplicateClipboardButton);
+		duplicateButtonPanel.setMaximumSize(new Dimension(
+				duplicateButtonPanel.getMaximumSize().width,
+				duplicateButtonPanel.getMinimumSize().height));
+
 		JScrollPane currentFileScrollPane = new JScrollPane(currentFileTextArea);
 		currentFilePanel.add(currentFileScrollPane);
+		currentFilePanel.add(duplicateButtonPanel);
 
 		centerPanel.setLayout(new GridLayout(1, 3));
 		centerPanel.add(fileBrowserPanel);
