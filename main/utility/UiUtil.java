@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.io.File;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 
 import main.ComplierState;
@@ -17,6 +18,22 @@ public class UiUtil {
     public UiUtil(MainWindow mainWindow, ComplierState state) {
         this.mainWindow = mainWindow;
         this.state = state;
+    }
+
+    /**
+     * Update cursor position to start of last line to show textArea contents
+     * 
+     * @param textArea
+     */
+    public static void bringCursorToStart(JTextArea textArea) {
+        int lastLineNumber = textArea.getLineCount() - 1;
+        try {
+            int lineStartCaretPosition = textArea.getLineStartOffset(lastLineNumber);
+            textArea.setCaretPosition(lineStartCaretPosition);
+
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -106,17 +123,10 @@ public class UiUtil {
             currentText += "\n" + clipboardText;
 
         mainWindow.currentFileTextArea.setText(currentText);
-        mainWindow.clipboardTextArea.setText(clipboardText);
+        mainWindow.clipboardTextArea.setText(clipboardText.trim());
 
-        // Update cursor position to start of last line to show textArea contents
-        int lastLineNumber = mainWindow.currentFileTextArea.getLineCount() - 1;
-        try {
-            int lineStartCaretPosition = mainWindow.currentFileTextArea.getLineStartOffset(lastLineNumber);
-            mainWindow.currentFileTextArea.setCaretPosition(lineStartCaretPosition);
-
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
+        bringCursorToStart(mainWindow.currentFileTextArea);
+        bringCursorToStart(mainWindow.clipboardTextArea);
 
         // Save file if clipboard has multiple lines
         if (checkAutoSave && state.multiLineAutosave) {

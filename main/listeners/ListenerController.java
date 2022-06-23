@@ -211,6 +211,7 @@ DocumentListener, ItemListener, MyCustomListeners {
 		//Check if text file selected and show contents
 		String content = FileUtil.readTextFile(selectedFile);
 		mainWindow.fileViewerTextArea.setText(content);
+		mainWindow.fileViewerTextArea.setCaretPosition(0);
     }
 
     // Updates outputFolderTextField which will update file explorer tree

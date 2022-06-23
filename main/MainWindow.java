@@ -23,7 +23,6 @@ import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileSystemView;
 
 import main.listeners.ListenerController;
-import main.misc.SmartScroller;
 import main.utility.PreferenceUtil;
 import main.utility.UiUtil;
 import main.views.FileBrowser;
@@ -97,6 +96,7 @@ public class MainWindow extends JFrame implements WindowListener {
 			currentText += "\n" + text;
 
 		console.setText(currentText);
+		UiUtil.bringCursorToStart(console);
 	}
 
 	// Draws GUI layout of the program
@@ -216,8 +216,6 @@ public class MainWindow extends JFrame implements WindowListener {
 		fileBrowserPanel.add(tempPanel);
 
 		JScrollPane fileViewerScrollPane = new JScrollPane(fileViewerTextArea);
-		new SmartScroller(fileViewerScrollPane, SmartScroller.VERTICAL, SmartScroller.START);
-		new SmartScroller(fileViewerScrollPane, SmartScroller.HORIZONTAL, SmartScroller.START);
 		clipboardPanel.add(fileViewerScrollPane);
 
 		JPanel duplicateButtonPanel = new JPanel();
@@ -228,8 +226,6 @@ public class MainWindow extends JFrame implements WindowListener {
 				duplicateButtonPanel.getMinimumSize().height));
 
 		JScrollPane currentFileScrollPane = new JScrollPane(currentFileTextArea);
-		new SmartScroller(fileViewerScrollPane, SmartScroller.VERTICAL, SmartScroller.END);
-		new SmartScroller(fileViewerScrollPane, SmartScroller.HORIZONTAL, SmartScroller.START);
 		currentFilePanel.add(currentFileScrollPane);
 		currentFilePanel.add(duplicateButtonPanel);
 
@@ -254,7 +250,6 @@ public class MainWindow extends JFrame implements WindowListener {
 		JScrollPane clipboardScroll = new JScrollPane();
 		clipboardScroll.add(clipboardTextArea);
 		clipboardScroll.setViewportView(clipboardTextArea);
-		new SmartScroller(clipboardScroll, SmartScroller.HORIZONTAL, SmartScroller.START);
 
 		bottomRow.setLayout(new BoxLayout(bottomRow, BoxLayout.X_AXIS));
 		bottomRow.add(autoSaveCheckBox);
@@ -267,8 +262,6 @@ public class MainWindow extends JFrame implements WindowListener {
 		JScrollPane consoleScroll = new JScrollPane();
 		consoleScroll.add(console);
 		consoleScroll.setViewportView(console);
-		new SmartScroller(consoleScroll, SmartScroller.VERTICAL, SmartScroller.END);
-		new SmartScroller(consoleScroll, SmartScroller.HORIZONTAL, SmartScroller.START);
 
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
 		bottomPanel.add(clipboardScroll);
