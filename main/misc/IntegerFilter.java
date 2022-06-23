@@ -1,9 +1,11 @@
-package main;
+package main.misc;
 import java.awt.Toolkit;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
+
+import main.MainWindow;
 
 public class IntegerFilter extends DocumentFilter {
     private boolean shouldLimit;

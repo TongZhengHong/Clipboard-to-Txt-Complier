@@ -14,14 +14,13 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.DefaultCaret;
 import javax.swing.text.PlainDocument;
 
 import main.MainWindow;
+import main.misc.IntegerFilter;
 import main.utility.FileUtil;
 import main.utility.UiUtil;
 import main.ComplierState;
-import main.IntegerFilter;
 
 public class ListenerController implements ActionListener,
 DocumentListener, ItemListener, MyCustomListeners {
@@ -121,9 +120,6 @@ DocumentListener, ItemListener, MyCustomListeners {
 		mainWindow.fileViewerTextArea.setEditable(false);
 		mainWindow.clipboardTextArea.setEditable(false);
 		MainWindow.console.setEditable(false);
-        
-		DefaultCaret consoleCaret = (DefaultCaret) MainWindow.console.getCaret();
-		consoleCaret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
     }
 
     @Override
@@ -215,7 +211,6 @@ DocumentListener, ItemListener, MyCustomListeners {
 		//Check if text file selected and show contents
 		String content = FileUtil.readTextFile(selectedFile);
 		mainWindow.fileViewerTextArea.setText(content);
-		mainWindow.fileViewerTextArea.setCaretPosition(0);
     }
 
     // Updates outputFolderTextField which will update file explorer tree
