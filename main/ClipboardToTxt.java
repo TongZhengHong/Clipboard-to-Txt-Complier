@@ -21,13 +21,12 @@ public class ClipboardToTxt {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-				ComplierState state = new ComplierState();
                 final MainWindow mainWindow = new MainWindow("Clipboard To Txt");
 		
-				PreferenceUtil.loadPreferences(mainWindow, state);
+				PreferenceUtil.loadPreferences(mainWindow);
 		
-				UiUtil uiUtil = new UiUtil(mainWindow, state);
-				new ListenerController(mainWindow, state, uiUtil);
+				UiUtil uiUtil = new UiUtil(mainWindow);
+				new ListenerController(mainWindow, uiUtil);
             }
         });
 	}

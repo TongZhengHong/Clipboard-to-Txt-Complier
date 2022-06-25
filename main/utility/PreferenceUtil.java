@@ -20,7 +20,7 @@ public class PreferenceUtil {
      * 
      * @param mainWindow Get values from textfields to save
      */
-    public static void saveAllPreferences(MainWindow mainWindow, ComplierState state) {
+    public static void saveAllPreferences(MainWindow mainWindow) {
 		Preferences prefs = Preferences.userNodeForPackage(PreferenceUtil.class);
 
         System.out.println("Closing window, saving constants...");
@@ -30,7 +30,7 @@ public class PreferenceUtil {
         prefs.put(trailingKey, mainWindow.trailingTextField.getText());
         prefs.put(zeroesKey, mainWindow.leadingZerosTextField.getText());
         prefs.put(fileNameKey, mainWindow.fileNameTextField.getText());
-        prefs.putBoolean(autosaveKey, state.multiLineAutosave);
+        prefs.putBoolean(autosaveKey, ComplierState.multiLineAutosave);
     }
 
     /**
@@ -41,12 +41,12 @@ public class PreferenceUtil {
      * @param mainWindow Load values to textfields
      * @param state Load previous autosave and folder information
      */
-    public static void loadPreferences(MainWindow mainWindow, ComplierState state) {
+    public static void loadPreferences(MainWindow mainWindow) {
         Preferences prefs = Preferences.userNodeForPackage(PreferenceUtil.class);
 
         boolean autosave = prefs.getBoolean(autosaveKey, false);
 		mainWindow.autoSaveCheckBox.setSelected(autosave);
-        state.multiLineAutosave = autosave;
+        ComplierState.multiLineAutosave = autosave;
 
 		String output = prefs.get(outputFolderKey, "");
 		String leading = prefs.get(leadingKey, "");
@@ -63,8 +63,8 @@ public class PreferenceUtil {
 
 		File outputFile = new File(output);
 		if (outputFile.exists()) {
-			state.currentDirectory = outputFile;
-			state.parentDirectory = outputFile.getParentFile();
+			ComplierState.currentDirectory = outputFile;
+			ComplierState.parentDirectory = outputFile.getParentFile();
 			mainWindow.outputFolderTextField.setText(output);
 
             //Set starting directory of fileBrowser to previously store folder
