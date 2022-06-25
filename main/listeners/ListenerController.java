@@ -155,7 +155,8 @@ DocumentListener, ItemListener, MyCustomListeners {
 
 		} else if (command.equals("Choose Folder")) {
 			String filePath = FileUtil.chooseFolder(mainWindow);
-            mainWindow.outputFolderTextField.setText(filePath);
+			if (filePath != null) 
+            	mainWindow.outputFolderTextField.setText(filePath);
 
 		} else if (command.equals("Back")) {
 			if (state.parentDirectory == null || !state.parentDirectory.exists())
