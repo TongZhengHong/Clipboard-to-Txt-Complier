@@ -1,4 +1,4 @@
-package main.listeners;
+package main.listeners.file_browser;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

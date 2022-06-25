@@ -1,4 +1,4 @@
-package main.listeners;
+package main.listeners.file_browser;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -66,7 +66,7 @@ public class FileBrowserMouseListener implements MouseListener {
             if (selectedRow == -1) return;
 
             fileBrowserTree.setSelectionRow(selectedRow);
-            
+
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) fileBrowserTree.getLastSelectedPathComponent();
             ComplierState.selectedFile = (File) node.getUserObject();
 
