@@ -22,7 +22,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileSystemView;
 
-import main.listeners.ListenerController;
 import main.utility.PreferenceUtil;
 import main.utility.UiUtil;
 import main.views.FileBrowser;
@@ -62,22 +61,17 @@ public class MainWindow extends JFrame implements WindowListener {
 
 	private ComplierState state;
 
-	public MainWindow(String title) {
+	public MainWindow(String title, ComplierState state) {
 		setTitle(title);
+		this.state = state;
+
 		ImageIcon icon = new ImageIcon(getClass().getResource("../images/clipboard.png"));
 		setIconImage(icon.getImage());
 
 		FileSystemView sys = FileSystemView.getFileSystemView();
 		File[] root = sys.getRoots();
 		fileBrowser = new FileBrowser(root[0].getAbsolutePath());
-
-		state = new ComplierState();
 		state.currentDirectory = root[0];
-
-		PreferenceUtil.loadPreferences(this, state);
-
-		UiUtil uiUtil = new UiUtil(this, state);
-		new ListenerController(this, state, uiUtil);
 
 		createLayout();
 	}
