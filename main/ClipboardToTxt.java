@@ -22,7 +22,7 @@ public class ClipboardToTxt {
             @Override
             public void run() {
 				ComplierState state = new ComplierState();
-                final MainWindow mainWindow = new MainWindow("Clipboard To Txt", state);
+                final MainWindow mainWindow = new MainWindow("Clipboard To Txt");
 		
 				PreferenceUtil.loadPreferences(mainWindow, state);
 		

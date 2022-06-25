@@ -3,8 +3,6 @@ package main;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -22,11 +20,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileSystemView;
 
-import main.utility.PreferenceUtil;
 import main.utility.UiUtil;
 import main.views.FileBrowser;
 
-public class MainWindow extends JFrame implements WindowListener {
+public class MainWindow extends JFrame {
 
 	// Top section
 	public JButton startStopButton = new JButton("Start");
@@ -59,11 +56,8 @@ public class MainWindow extends JFrame implements WindowListener {
 	public JTextField trailingTextField = new JTextField();
 	public JTextField fileNameTextField = new JTextField();
 
-	private ComplierState state;
-
-	public MainWindow(String title, ComplierState state) {
+	public MainWindow(String title) {
 		setTitle(title);
-		this.state = state;
 
 		ImageIcon icon = new ImageIcon(getClass().getResource("../images/clipboard.png"));
 		setIconImage(icon.getImage());
@@ -71,7 +65,6 @@ public class MainWindow extends JFrame implements WindowListener {
 		FileSystemView sys = FileSystemView.getFileSystemView();
 		File[] root = sys.getRoots();
 		fileBrowser = new FileBrowser(root[0].getAbsolutePath());
-		state.currentDirectory = root[0];
 
 		createLayout();
 	}
@@ -97,7 +90,6 @@ public class MainWindow extends JFrame implements WindowListener {
 	private void createLayout() {
 		setSize(640, 480);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		addWindowListener(this);
 
 		JPanel topPanel = createTopSection();
 		JPanel centerPanel = createCenterSection();
@@ -266,34 +258,5 @@ public class MainWindow extends JFrame implements WindowListener {
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
 		return bottomPanel;
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		PreferenceUtil.saveAllPreferences(this, state);
-	}
-
-	@Override
-	public void windowOpened(WindowEvent e) {
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
 	}
 }

@@ -46,6 +46,8 @@ DocumentListener, ItemListener, MyCustomListeners {
     }
 
     private void setupListeners() {
+		mainWindow.addWindowListener(new WindowCloseListener(mainWindow, state));
+
         // Updates file explorer tree whenever output folder text field changes
 		mainWindow.outputFolderTextField.getDocument().addDocumentListener(new DocumentListener() {
 			public void insertUpdate(DocumentEvent ev) {
