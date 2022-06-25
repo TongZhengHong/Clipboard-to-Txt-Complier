@@ -6,7 +6,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -23,32 +22,28 @@ import main.utility.UiUtil;
 import main.ComplierState;
 
 public class ListenerController implements ActionListener,
-DocumentListener, ItemListener, MyCustomListeners {
-    MainWindow mainWindow;
-    ComplierState state;
-    UiUtil uiUtil;
+		DocumentListener, ItemListener, MyCustomListeners {
+	MainWindow mainWindow;
+	UiUtil uiUtil;
 
-    public ListenerController(MainWindow mainWindow, ComplierState state, UiUtil uiUtil) {
-        this.mainWindow = mainWindow;
-        this.state = state;
-        this.uiUtil = uiUtil;
+	public ListenerController(MainWindow mainWindow, UiUtil uiUtil) {
+		this.mainWindow = mainWindow;
+		this.uiUtil = uiUtil;
 
-        setupCustomListeners();
-        setupListeners();
-    }
+		setupCustomListeners();
+		setupListeners();
+	}
 
-    private void setupCustomListeners() {
-        mainWindow.fileBrowser.addTreeListener(this);
-
-        ClipboardListener board = new ClipboardListener();
+	private void setupCustomListeners() {
+		ClipboardListener board = new ClipboardListener();
 		board.addClipBoardListener(this);
 		board.start();
-    }
+	}
 
-    private void setupListeners() {
-		mainWindow.addWindowListener(new WindowCloseListener(mainWindow, state));
+	private void setupListeners() {
+		mainWindow.addWindowListener(new WindowCloseListener(mainWindow));
 
-        // Updates file explorer tree whenever output folder text field changes
+		// Updates file explorer tree whenever output folder text field changes
 		mainWindow.outputFolderTextField.getDocument().addDocumentListener(new DocumentListener() {
 			public void insertUpdate(DocumentEvent ev) {
 				uiUtil.updateFileBrowser();
@@ -61,6 +56,25 @@ DocumentListener, ItemListener, MyCustomListeners {
 			public void changedUpdate(DocumentEvent ev) {
 			}
 		});
+
+		mainWindow.fileBrowser.addTreeMouseListener(new FileBrowserMouseListener(
+				mainWindow.fileBrowser,
+				mainWindow.fileBrowserPopupMenu,
+				uiUtil));
+
+
+		FilePopupMenuListener popupMenuListener = new FilePopupMenuListener(uiUtil);
+
+		mainWindow.fileBrowserPopupMenu.openMenuItem.setActionCommand("open");
+		mainWindow.fileBrowserPopupMenu.openMenuItem.addActionListener(popupMenuListener);
+
+		mainWindow.fileBrowserPopupMenu.renameMenuItem.setActionCommand("rename");
+		mainWindow.fileBrowserPopupMenu.renameMenuItem.addActionListener(popupMenuListener);
+
+		mainWindow.fileBrowserPopupMenu.deleteMenuItem.setActionCommand("delete");
+		mainWindow.fileBrowserPopupMenu.deleteMenuItem.addActionListener(popupMenuListener);
+
+
 
 		mainWindow.startStopButton.setMnemonic(KeyEvent.VK_S);
 		mainWindow.startStopButton.setActionCommand("Start");
@@ -97,17 +111,17 @@ DocumentListener, ItemListener, MyCustomListeners {
 		mainWindow.saveButton.setActionCommand("Save File");
 		mainWindow.saveButton.addActionListener(this);
 
-		//Add accelerator for save button
-		KeyStroke keySave = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK); 
-		Action performSave = new AbstractAction("Save") {  
+		// Add accelerator for save button
+		KeyStroke keySave = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
+		Action performSave = new AbstractAction("Save") {
 			public void actionPerformed(ActionEvent e) {
 				uiUtil.saveFile();
 			}
 		};
 		mainWindow.saveButton.getActionMap().put("performSave", performSave);
-		mainWindow.saveButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keySave, "performSave"); 
+		mainWindow.saveButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keySave, "performSave");
 
-        mainWindow.leadingTextField.getDocument().addDocumentListener(this);
+		mainWindow.leadingTextField.getDocument().addDocumentListener(this);
 		mainWindow.numberTextField.getDocument().addDocumentListener(this);
 		mainWindow.trailingTextField.getDocument().addDocumentListener(this);
 		mainWindow.leadingZerosTextField.getDocument().addDocumentListener(this);
@@ -122,21 +136,21 @@ DocumentListener, ItemListener, MyCustomListeners {
 		mainWindow.fileViewerTextArea.setEditable(false);
 		mainWindow.clipboardTextArea.setEditable(false);
 		MainWindow.console.setEditable(false);
-    }
+	}
 
-    @Override
-    public void itemStateChanged(ItemEvent e) {
+	@Override
+	public void itemStateChanged(ItemEvent e) {
 		Object source = e.getItemSelectable();
 		if (source == mainWindow.autoSaveCheckBox) {
-			state.multiLineAutosave = e.getStateChange() == 1;
+			ComplierState.multiLineAutosave = e.getStateChange() == 1;
 		}
 	}
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+	@Override
+	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
 		if (command.equals("Start")) {
-			state.isTracking = true;
+			ComplierState.isTracking = true;
 			mainWindow.statusLabel.setText("Status: Tracking");
 
 			mainWindow.startStopButton.setText("Stop");
@@ -146,7 +160,7 @@ DocumentListener, ItemListener, MyCustomListeners {
 			MainWindow.consoleLog("Start tracking clipboard changes...");
 
 		} else if (command.equals("Stop")) {
-			state.isTracking = false;
+			ComplierState.isTracking = false;
 			mainWindow.statusLabel.setText("Status: Idle");
 
 			mainWindow.startStopButton.setText("Start");
@@ -157,22 +171,22 @@ DocumentListener, ItemListener, MyCustomListeners {
 
 		} else if (command.equals("Choose Folder")) {
 			String filePath = FileUtil.chooseFolder(mainWindow);
-			if (filePath != null) 
-            	mainWindow.outputFolderTextField.setText(filePath);
+			if (filePath != null)
+				mainWindow.outputFolderTextField.setText(filePath);
 
 		} else if (command.equals("Back")) {
-			if (state.parentDirectory == null || !state.parentDirectory.exists())
+			if (ComplierState.parentDirectory == null || !ComplierState.parentDirectory.exists())
 				return;
-			mainWindow.outputFolderTextField.setText(state.parentDirectory.getAbsolutePath());
+			mainWindow.outputFolderTextField.setText(ComplierState.parentDirectory.getAbsolutePath());
 
 		} else if (command.equals("Refresh")) {
 			uiUtil.updateFileBrowser();
 
 		} else if (command.equals("Show Explorer")) {
-			FileUtil.showFileExplorer(state.currentDirectory);
+			FileUtil.showFileExplorer(ComplierState.currentDirectory);
 
 		} else if (command.equals("Open File")) {
-			FileUtil.open(state.selectedFile);
+			FileUtil.open(ComplierState.selectedFile);
 
 		} else if (command.equals("Rename File")) {
 			uiUtil.renameFile();
@@ -182,48 +196,26 @@ DocumentListener, ItemListener, MyCustomListeners {
 
 		} else if (command.equals("Duplicate")) {
 			uiUtil.duplicateClipboard();
-
-		} 
+		}
 	}
 
-    @Override
+	@Override
 	// DocumentListener methods for file name related text fields
 	public void insertUpdate(DocumentEvent ev) {
 		uiUtil.updateFileNameTextField();
 	}
 
-    @Override
+	@Override
 	public void removeUpdate(DocumentEvent ev) {
 		uiUtil.updateFileNameTextField();
 	}
 
-    @Override
+	@Override
 	public void changedUpdate(DocumentEvent ev) {
 	}
 
-    @Override
-    public void onClipboardUpdate(String data) {
-        uiUtil.handleClipboardUpdate(data);
-    }
-
-    @Override
-    public void onFileBrowserItemClick(File selectedFile) {
-		//Update selectedFile state
-		state.selectedFile = selectedFile;
-		
-		//Check if text file selected and show contents
-		String content = FileUtil.readTextFile(selectedFile);
-		mainWindow.fileViewerTextArea.setText(content);
-		mainWindow.fileViewerTextArea.setCaretPosition(0);
-    }
-
-    // Updates outputFolderTextField which will update file explorer tree
-    @Override
-    public void onFileBrowserFolderClick(String path) {
-		//Update new folder in fileBrowser
-		mainWindow.outputFolderTextField.setText(path);
-
-		//Reset fileViewer to empty as folder is selected
-		mainWindow.fileViewerTextArea.setText("");
-    }
+	@Override
+	public void onClipboardUpdate(String data) {
+		uiUtil.handleClipboardUpdate(data);
+	}
 }

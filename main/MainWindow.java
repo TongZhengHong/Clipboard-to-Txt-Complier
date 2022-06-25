@@ -22,8 +22,11 @@ import javax.swing.filechooser.FileSystemView;
 
 import main.utility.UiUtil;
 import main.views.FileBrowser;
+import main.views.FileBrowserPopupMenu;
 
 public class MainWindow extends JFrame {
+
+	public FileBrowserPopupMenu fileBrowserPopupMenu = new FileBrowserPopupMenu();
 
 	// Top section
 	public JButton startStopButton = new JButton("Start");

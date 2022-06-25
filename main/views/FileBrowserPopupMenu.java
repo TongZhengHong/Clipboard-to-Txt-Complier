@@ -4,8 +4,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
-import main.listeners.FilePopupMenuListener;
-
 public class FileBrowserPopupMenu extends JPopupMenu {
     public JMenuItem openMenuItem = new JMenuItem("Open");
     public JMenuItem renameMenuItem = new JMenuItem("Rename");
@@ -13,7 +11,6 @@ public class FileBrowserPopupMenu extends JPopupMenu {
 
     public FileBrowserPopupMenu() {
         createPopupMenu();
-        new FilePopupMenuListener(this);
     }
 
     private void createPopupMenu() {

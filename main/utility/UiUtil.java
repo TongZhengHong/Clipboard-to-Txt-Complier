@@ -13,11 +13,9 @@ import main.MainWindow;
 
 public class UiUtil {
     MainWindow mainWindow;
-    ComplierState state;
 
-    public UiUtil(MainWindow mainWindow, ComplierState state) {
+    public UiUtil(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
-        this.state = state;
     }
 
     /**
@@ -100,20 +98,51 @@ public class UiUtil {
         File tempFile = new File(tempPath);
 
         if (tempFile.exists() && tempFile.isDirectory()) {
-            state.selectedFile = null;
-            state.currentDirectory = tempFile;
-            state.parentDirectory = tempFile.getParentFile();
+            ComplierState.selectedFile = null;
+            ComplierState.currentDirectory = tempFile;
+            ComplierState.parentDirectory = tempFile.getParentFile();
 
             mainWindow.fileBrowser.buildTreeFromPath(tempPath);
         }
     }
 
+    /**
+	 * Display file contents when text (.txt) FILE is clicked in 
+     * fileBrowser. Update <code>selectedFile</code> state.
+     * 
+	 * @param selectedFile File object of selected file
+	 */
+	public void handleFileBrowserFileClick(File selectedFile) {
+		// Update selectedFile state
+		ComplierState.selectedFile = selectedFile;
+
+		// Check if text file selected and show contents
+		String content = FileUtil.readTextFile(selectedFile);
+		mainWindow.fileViewerTextArea.setText(content);
+		mainWindow.fileViewerTextArea.setCaretPosition(0);
+	}
+
+    /**
+	 * Updates <code>outputFolderTextField</code> which will update 
+     * file browser when FOLDER is clicked in <code>fileBrowser</code>. 
+     * Reset <code>fileViewerTextArea</code> to empty.
+     * 
+	 * @param path String path of selected folder
+	 */
+	public void handleFileBrowserFolderClick(String path) {
+		// Update new folder in fileBrowser
+		mainWindow.outputFolderTextField.setText(path);
+
+		// Reset fileViewer to empty as folder is selected
+		mainWindow.fileViewerTextArea.setText("");
+	}
+
     private void handleClipboardUpdate(String clipboardText, boolean checkAutoSave) {
         // Do not handle clipboard changes if NOT tracking
-        if (!state.isTracking)
+        if (!ComplierState.isTracking)
             return;
 
-        state.previousClipboard = clipboardText;
+        ComplierState.previousClipboard = clipboardText;
 
         String currentText = mainWindow.currentFileTextArea.getText();
 
@@ -129,7 +158,7 @@ public class UiUtil {
         bringCursorToStart(mainWindow.clipboardTextArea);
 
         // Save file if clipboard has multiple lines
-        if (checkAutoSave && state.multiLineAutosave) {
+        if (checkAutoSave && ComplierState.multiLineAutosave) {
             if (clipboardText.contains("\n"))
                 saveFile();
         }
@@ -147,7 +176,7 @@ public class UiUtil {
             MainWindow.consoleLog("Previous clipboard is empty!");
         } else
             // Do not check autosave, duplicate previous clipboard even with newline
-            handleClipboardUpdate(state.previousClipboard, false);
+            handleClipboardUpdate(ComplierState.previousClipboard, false);
     }
 
     private boolean showConfirmSaveDialog(Component context) {
@@ -157,6 +186,17 @@ public class UiUtil {
                 "Save File",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE);
+
+        return confirmDialogResult == JOptionPane.YES_OPTION;
+    }
+
+    private boolean showConfirmDeleteDialog(Component context) {
+        int confirmDialogResult = JOptionPane.showConfirmDialog(
+                context,
+                "Are you sure you would like to delete this file?",
+                "Delete File",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
 
         return confirmDialogResult == JOptionPane.YES_OPTION;
     }
@@ -197,7 +237,7 @@ public class UiUtil {
      * </p>
      */
     public void renameFile() {
-        File file = state.selectedFile;
+        File file = ComplierState.selectedFile;
 
         if (file == null || !file.exists()) {
             System.out.println("Please select a file to rename!");
@@ -270,6 +310,22 @@ public class UiUtil {
             updateFileBrowser();
 
             incrementNumberTextField();
+        }
+    }
+
+    public void deleteFile(File selectedFile) {
+        boolean confirmDelete = showConfirmDeleteDialog(mainWindow);
+        if (confirmDelete) {
+            if (selectedFile.delete()) {
+                System.out.println("Successfully deleted: " + selectedFile.getAbsolutePath());
+                MainWindow.consoleLog("Successfully deleted: " + selectedFile.getAbsolutePath());
+
+                // Update file browser to remove deleted file
+                updateFileBrowser();
+            } else {
+                System.out.println("Error occurred deleting: " + selectedFile.getAbsolutePath());
+                MainWindow.consoleLog("Error occurred deleting: " + selectedFile.getAbsolutePath());
+            }
         }
     }
 }

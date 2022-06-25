@@ -1,27 +1,23 @@
 package main.views;
-import java.io.*;
+
+import java.awt.event.MouseListener;
+
+import java.io.File;
 
 import java.util.List;
 import java.util.ArrayList;
 
-import javax.swing.*;
-import javax.swing.tree.*;
-import javax.swing.event.*;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.filechooser.FileSystemView;
 
-import main.listeners.FileBrowserMouseListener;
-import main.listeners.MyCustomListeners;
-
-public class FileBrowser extends JScrollPane implements TreeSelectionListener {
+public class FileBrowser extends JScrollPane {
 	private JTree tree;
 	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
-    private FileBrowserPopupMenu fileBrowserPopupMenu = new FileBrowserPopupMenu();
-	
-	private List<MyCustomListeners> listeners = new ArrayList<MyCustomListeners>();
-	
-	public void addTreeListener(MyCustomListeners listener) {
-		listeners.add(listener);
-	}
+
+    private MouseListener mouseListener;
 
     public FileBrowser(String path) {
         buildTreeFromPath(path);
@@ -71,30 +67,23 @@ public class FileBrowser extends JScrollPane implements TreeSelectionListener {
 		tree = new JTree(treeModel);
 		tree.setRootVisible(false);
 		// tree.setVisibleRowCount(15);
-		
-        FileBrowserMouseListener popupListener = 
-            new FileBrowserMouseListener(tree, fileBrowserPopupMenu);
-        tree.addMouseListener(popupListener);
-		tree.addTreeSelectionListener(this);
 		tree.setCellRenderer(new FileItemRenderer());
 		tree.expandRow(0);
+
+        // Re-initialise previous mouse listener
+        if (mouseListener != null) {
+            tree.addMouseListener(mouseListener);
+        }
 		
 		this.setViewportView(tree);
 	}
-	
-    @Override
-	public void valueChanged(TreeSelectionEvent tse){
-		DefaultMutableTreeNode node =
-			(DefaultMutableTreeNode) tse.getPath().getLastPathComponent();
-			
-		File file = (File) node.getUserObject();
-        // Update ui to show that folder as root
-        for(MyCustomListeners listener : listeners){
-            if (file.isDirectory()) {
-                listener.onFileBrowserFolderClick(file.getAbsolutePath());
-            } else if (file.isFile()) {
-                listener.onFileBrowserItemClick(file);
-            }
-        }
-	}
+
+    public void addTreeMouseListener(MouseListener listener) {
+        mouseListener = listener;
+        tree.addMouseListener(listener);
+    }
+
+    public JTree getTree() {
+        return tree;
+    }
 }
