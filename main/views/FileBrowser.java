@@ -14,7 +14,7 @@ import main.listeners.MyCustomListeners;
 
 public class FileBrowser extends JScrollPane implements TreeSelectionListener {
 	private JTree tree;
-	private FileSystemView fileSystemView;
+	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
     private FileBrowserPopupMenu fileBrowserPopupMenu = new FileBrowserPopupMenu();
 	
 	private List<MyCustomListeners> listeners = new ArrayList<MyCustomListeners>();
@@ -24,20 +24,20 @@ public class FileBrowser extends JScrollPane implements TreeSelectionListener {
 	}
 
     public FileBrowser(String path) {
-		fileSystemView = FileSystemView.getFileSystemView();
         buildTreeFromPath(path);
     }
 	
 	public void buildTreeFromPath(String path) {
         if (path == null || path.isEmpty()) return;
+
 		File currentDir = new File(path);
         if (!currentDir.exists() || !currentDir.isDirectory()) return;
 
 		File[] root = { currentDir };
-		buildTree(root, true);
+		buildTree(root);
 	}
 	
-	private void buildTree(File[] roots, boolean populateFolder) {		
+	private void buildTree(File[] roots) {		
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode();
 		DefaultTreeModel treeModel = new DefaultTreeModel(root);
 		
@@ -70,7 +70,7 @@ public class FileBrowser extends JScrollPane implements TreeSelectionListener {
 
 		tree = new JTree(treeModel);
 		tree.setRootVisible(false);
-		tree.setVisibleRowCount(15);
+		// tree.setVisibleRowCount(15);
 		
         FileBrowserMouseListener popupListener = 
             new FileBrowserMouseListener(tree, fileBrowserPopupMenu);

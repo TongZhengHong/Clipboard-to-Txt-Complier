@@ -5,7 +5,6 @@ import java.util.prefs.Preferences;
 
 import main.ComplierState;
 import main.MainWindow;
-import main.views.FileBrowser;
 
 public class PreferenceUtil {
     final static String outputFolderKey = "Output Folder";
@@ -44,7 +43,7 @@ public class PreferenceUtil {
      */
     public static void loadPreferences(MainWindow mainWindow, ComplierState state) {
         Preferences prefs = Preferences.userNodeForPackage(PreferenceUtil.class);
-        
+
         boolean autosave = prefs.getBoolean(autosaveKey, false);
 		mainWindow.autoSaveCheckBox.setSelected(autosave);
         state.multiLineAutosave = autosave;
@@ -69,7 +68,7 @@ public class PreferenceUtil {
 			mainWindow.outputFolderTextField.setText(output);
 
             //Set starting directory of fileBrowser to previously store folder
-            mainWindow.fileBrowser = new FileBrowser(outputFile.getAbsolutePath());
+            mainWindow.fileBrowser.buildTreeFromPath(outputFile.getAbsolutePath());
 		}
     }
 }
