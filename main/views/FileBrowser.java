@@ -9,11 +9,13 @@ import javax.swing.tree.*;
 import javax.swing.event.*;
 import javax.swing.filechooser.FileSystemView;
 
+import main.listeners.FileBrowserMouseListener;
 import main.listeners.MyCustomListeners;
 
 public class FileBrowser extends JScrollPane implements TreeSelectionListener {
 	private JTree tree;
 	private FileSystemView fileSystemView;
+    private FileBrowserPopupMenu fileBrowserPopupMenu = new FileBrowserPopupMenu();
 	
 	private List<MyCustomListeners> listeners = new ArrayList<MyCustomListeners>();
 	
@@ -70,6 +72,9 @@ public class FileBrowser extends JScrollPane implements TreeSelectionListener {
 		tree.setRootVisible(false);
 		tree.setVisibleRowCount(15);
 		
+        FileBrowserMouseListener popupListener = 
+            new FileBrowserMouseListener(tree, fileBrowserPopupMenu);
+        tree.addMouseListener(popupListener);
 		tree.addTreeSelectionListener(this);
 		tree.setCellRenderer(new FileItemRenderer());
 		tree.expandRow(0);
