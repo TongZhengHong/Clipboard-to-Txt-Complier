@@ -1,6 +1,6 @@
-package main.listeners;
+package main.listeners.clipboard;
 
-public interface MyCustomListeners {
+public interface ClipboardInterface {
 	/**
 	 * MyCustomListener callback when clipboard changes. 
 	 * Update clipboard text area with new change and autosave if needed

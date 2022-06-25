@@ -16,13 +16,15 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
 
 import main.MainWindow;
+import main.listeners.clipboard.ClipboardInterface;
+import main.listeners.clipboard.ClipboardListener;
 import main.misc.IntegerFilter;
 import main.utility.FileUtil;
 import main.utility.UiUtil;
 import main.ComplierState;
 
 public class ListenerController implements ActionListener,
-		DocumentListener, ItemListener, MyCustomListeners {
+		DocumentListener, ItemListener, ClipboardInterface {
 	MainWindow mainWindow;
 	UiUtil uiUtil;
 

@@ -1,4 +1,4 @@
-package main.listeners;
+package main.listeners.clipboard;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -11,10 +11,10 @@ import java.awt.datatransfer.Transferable;
 
 public class ClipboardListener extends Thread implements ClipboardOwner {
 	private String previousClipBoard = "";
-	private List<MyCustomListeners> listeners = new ArrayList<MyCustomListeners>();
+	private List<ClipboardInterface> listeners = new ArrayList<ClipboardInterface>();
 	private Clipboard sysClip = Toolkit.getDefaultToolkit().getSystemClipboard();
 	
-	public void addClipBoardListener(MyCustomListeners listener) {
+	public void addClipBoardListener(ClipboardInterface listener) {
 		listeners.add(listener);
 	}
   
@@ -44,7 +44,7 @@ public class ClipboardListener extends Thread implements ClipboardOwner {
 			
 			// Only update if clipboard content changes
 			if (!data.equals(previousClipBoard)) {
-				for(MyCustomListeners listener : listeners){
+				for(ClipboardInterface listener : listeners){
 					listener.onClipboardUpdate(data);
 				}
 			}
