@@ -1,10 +1,7 @@
 package main.utility;
 
-import java.awt.Component;
-
 import java.io.File;
 
-import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 
@@ -179,54 +176,6 @@ public class UiUtil {
             handleClipboardUpdate(ComplierState.previousClipboard, false);
     }
 
-    private boolean showConfirmSaveDialog(Component context) {
-        int confirmDialogResult = JOptionPane.showConfirmDialog(
-                context,
-                "File name already exists! Would you like to override the existing file?",
-                "Save File",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE);
-
-        return confirmDialogResult == JOptionPane.YES_OPTION;
-    }
-
-    private boolean showConfirmDeleteDialog(Component context) {
-        int confirmDialogResult = JOptionPane.showConfirmDialog(
-                context,
-                "Are you sure you would like to delete this file?",
-                "Delete File",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
-
-        return confirmDialogResult == JOptionPane.YES_OPTION;
-    }
-
-    private String showRenameDialog(Component context, File originalFile) {
-
-        Object inputDialogResult = JOptionPane.showInputDialog(
-                context,
-                "New file name: ",
-                "Rename File",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                null,
-                originalFile.getName());
-
-        // Cancel button is clicked
-        if (inputDialogResult == null)
-            return null;
-
-        String renamedString = inputDialogResult.toString();
-
-        if (renamedString.isEmpty() || renamedString.equals(originalFile.getName()))
-            return null;
-
-        if (!renamedString.contains(".txt"))
-            renamedString += ".txt";
-
-        return renamedString;
-    }
-
     /**
      * Solicits new file name from user via InputDialog. Update
      * <code>fileBrowser</code> only file renamed successfully to
@@ -251,7 +200,7 @@ public class UiUtil {
             return;
         }
 
-        String renamedFileName = showRenameDialog(mainWindow, file);
+        String renamedFileName = DialogUtil.showRenameDialog(mainWindow, file);
         // User cancel, empty file name or same file name
         if (renamedFileName == null)
             return;
@@ -259,6 +208,39 @@ public class UiUtil {
         boolean renameSuccess = FileUtil.rename(file, renamedFileName);
         if (renameSuccess)
             updateFileBrowser();
+    }
+    
+    /**
+     * Delete user selected file. Ask user to confirm delete operation.
+     * Update <code>fileBrowser</code> to show file removed from tree.
+     * 
+     * <p>
+     * Only allows text (.txt) files to be deleted.
+     * </p>
+     * 
+     * @param selectedFile File to be deleted
+     */
+    public void deleteFile(File selectedFile) {
+        if (!FileUtil.isTxtFile(selectedFile)) {
+            System.out.println("Only allowed to delete text (.txt) files!");
+            MainWindow.consoleLog("Only allowed to delete text (.txt) files!");
+            return;
+        }
+
+        boolean confirmDelete = DialogUtil.showConfirmDeleteDialog(mainWindow);
+
+        if (confirmDelete) {
+            if (selectedFile.delete()) {
+                System.out.println("Successfully deleted: " + selectedFile.getAbsolutePath());
+                MainWindow.consoleLog("Successfully deleted: " + selectedFile.getAbsolutePath());
+
+                // Update file browser to remove deleted file
+                updateFileBrowser();
+            } else {
+                System.out.println("Error occurred deleting: " + selectedFile.getAbsolutePath());
+                MainWindow.consoleLog("Error occurred deleting: " + selectedFile.getAbsolutePath());
+            }
+        }
     }
 
     /**
@@ -291,7 +273,7 @@ public class UiUtil {
 
         // Ask user to override if there is an existing file
         if (tempFile.exists()) {
-            boolean confirmSave = showConfirmSaveDialog(mainWindow);
+            boolean confirmSave = DialogUtil.showConfirmSaveDialog(mainWindow);
 
             // User chooses NOT to override file, abort saving file
             if (!confirmSave) {
@@ -310,22 +292,6 @@ public class UiUtil {
             updateFileBrowser();
 
             incrementNumberTextField();
-        }
-    }
-
-    public void deleteFile(File selectedFile) {
-        boolean confirmDelete = showConfirmDeleteDialog(mainWindow);
-        if (confirmDelete) {
-            if (selectedFile.delete()) {
-                System.out.println("Successfully deleted: " + selectedFile.getAbsolutePath());
-                MainWindow.consoleLog("Successfully deleted: " + selectedFile.getAbsolutePath());
-
-                // Update file browser to remove deleted file
-                updateFileBrowser();
-            } else {
-                System.out.println("Error occurred deleting: " + selectedFile.getAbsolutePath());
-                MainWindow.consoleLog("Error occurred deleting: " + selectedFile.getAbsolutePath());
-            }
         }
     }
 }
