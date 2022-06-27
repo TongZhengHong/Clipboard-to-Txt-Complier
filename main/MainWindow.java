@@ -190,10 +190,7 @@ public class MainWindow extends JFrame {
 		clipboardPanel.setBorder(BorderFactory.createTitledBorder("File Viewer"));
 		currentFilePanel.setBorder(BorderFactory.createTitledBorder("Current Text File"));
 		
-		sortByNameButton.setIcon(upIcon);
 		sortByNameButton.setHorizontalTextPosition(AbstractButton.LEADING); 
-		sortByDateButton.setIcon(upIcon);
-		sortByDateButton.setIcon(downIcon);
 		sortByDateButton.setHorizontalTextPosition(AbstractButton.LEADING); 
 
 		fileControlPanel.add(backButton);

@@ -7,6 +7,7 @@ import javax.swing.text.BadLocationException;
 
 import main.ComplierState;
 import main.MainWindow;
+import main.views.FileBrowser;
 
 public class UiUtil {
     MainWindow mainWindow;
@@ -99,8 +100,66 @@ public class UiUtil {
             ComplierState.currentDirectory = tempFile;
             ComplierState.parentDirectory = tempFile.getParentFile();
 
-            mainWindow.fileBrowser.buildTreeFromPath(tempPath);
+            mainWindow.fileBrowser.buildTreeFromPath(tempPath, ComplierState.fileSortBy);
         }
+    }
+
+    /**
+     * Toggles SortByName button between 3 states: Ascending, Descending
+     * and Normal. Updates ComplierState with new sorting criteria.
+     * Remove icon on SortByDate if previous criteria was by date.
+     */
+    public void toggleSortByName() {
+        int result = FileBrowser.NAME_ASCENDING;
+		mainWindow.sortByNameButton.setIcon(mainWindow.upIcon);
+
+        if (ComplierState.fileSortBy == FileBrowser.NORMAL_ORDER) {
+            result = FileBrowser.NAME_ASCENDING;
+			mainWindow.sortByNameButton.setIcon(mainWindow.upIcon);
+
+        } else if (ComplierState.fileSortBy == FileBrowser.NAME_ASCENDING) {
+            result = FileBrowser.NAME_DESCENDING;
+            mainWindow.sortByNameButton.setIcon(mainWindow.downIcon);
+
+        } else if (ComplierState.fileSortBy == FileBrowser.NAME_DESCENDING) {
+            result = FileBrowser.NORMAL_ORDER;
+            mainWindow.sortByNameButton.setIcon(null);
+
+        } else {
+            // Previous sort criteria is by DATE so now set it to no icon
+            mainWindow.sortByDateButton.setIcon(null);
+        }
+
+        ComplierState.fileSortBy = result;
+    }
+
+    /**
+     * Toggles SortByDate button between 3 states: Ascending, Descending
+     * and Normal. Updates ComplierState with new sorting criteria.
+     * Remove icon on SortByName if previous criteria was by name.
+     */
+    public void toggleSortByDate() {
+        int result = FileBrowser.DATE_ASCENDING;
+		mainWindow.sortByDateButton.setIcon(mainWindow.upIcon);
+
+        if (ComplierState.fileSortBy == FileBrowser.NORMAL_ORDER) {
+            result = FileBrowser.DATE_ASCENDING;
+            mainWindow.sortByDateButton.setIcon(mainWindow.upIcon);
+
+        } else if (ComplierState.fileSortBy == FileBrowser.DATE_ASCENDING) {
+            result = FileBrowser.DATE_DESCENDING;
+			mainWindow.sortByDateButton.setIcon(mainWindow.downIcon);
+
+        } else if (ComplierState.fileSortBy == FileBrowser.DATE_DESCENDING) {
+            result = FileBrowser.NORMAL_ORDER;
+            mainWindow.sortByDateButton.setIcon(null);
+
+        } else {
+            // Previous sort criteria is by NAME so now set it to no icon
+            mainWindow.sortByNameButton.setIcon(null);
+        }
+
+        ComplierState.fileSortBy = result;
     }
 
     /**

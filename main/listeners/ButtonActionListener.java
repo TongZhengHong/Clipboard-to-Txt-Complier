@@ -57,10 +57,12 @@ public class ButtonActionListener implements ActionListener {
 			FileUtil.showFileExplorer(ComplierState.currentDirectory);
 
 		} else if (command.equals("Sort by Name")) {
-			// FileUtil.open(ComplierState.selectedFile);
+			uiUtil.toggleSortByName();
+			uiUtil.updateFileBrowser();
 
 		} else if (command.equals("Sort by Date")) {
-			// uiUtil.renameFile();
+			uiUtil.toggleSortByDate();
+			uiUtil.updateFileBrowser();
 
 		} else if (command.equals("Save File")) {
 			uiUtil.saveFile();

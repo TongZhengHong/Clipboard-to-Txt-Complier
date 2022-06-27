@@ -4,16 +4,25 @@ import java.awt.event.MouseListener;
 
 import java.io.File;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+
+import main.ComplierState;
+import main.misc.FileNameComparator;
+
 import javax.swing.filechooser.FileSystemView;
 
 public class FileBrowser extends JScrollPane {
+    public final static int NAME_ASCENDING = 0;
+    public final static int NAME_DESCENDING = 1;
+    public final static int DATE_ASCENDING = 2;
+    public final static int DATE_DESCENDING = 3;
+    public final static int NORMAL_ORDER = 4;
+
 	private JTree tree;
 	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
 
@@ -22,18 +31,22 @@ public class FileBrowser extends JScrollPane {
     public FileBrowser(String path) {
         buildTreeFromPath(path);
     }
+
+    public void buildTreeFromPath(String path) {
+        buildTreeFromPath(path, ComplierState.fileSortBy);
+    }
 	
-	public void buildTreeFromPath(String path) {
+	public void buildTreeFromPath(String path, int sortBy) {
         if (path == null || path.isEmpty()) return;
 
 		File currentDir = new File(path);
         if (!currentDir.exists() || !currentDir.isDirectory()) return;
 
 		File[] root = { currentDir };
-		buildTree(root);
+		buildTree(root, sortBy);
 	}
 	
-	private void buildTree(File[] roots) {		
+	private void buildTree(File[] roots, int sortBy) {		
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode();
 		DefaultTreeModel treeModel = new DefaultTreeModel(root);
 		
@@ -44,22 +57,24 @@ public class FileBrowser extends JScrollPane {
 
 			File[] files = fileSystemView.getFiles(fileSystemRoot, true);
 
-            List<File> filesList = new ArrayList<File>();
-            List<File> foldersList = new ArrayList<File>();
-			for (File file : files) {
-				if (file.isDirectory()) {
-                    foldersList.add(file);
-				} else if (file.isFile()) {
-                    filesList.add(file);
-				}
-			}
-            
-            //Show folders first before files
-            for (File folder : foldersList) {
-                node.add(new DefaultMutableTreeNode(folder));
+            if (sortBy == NAME_ASCENDING) {
+                Arrays.sort(files, new FileNameComparator(true));
+
+            } else if (sortBy == NAME_DESCENDING) {
+                Arrays.sort(files, new FileNameComparator(false));
+
+            } else if (sortBy == DATE_ASCENDING) {
+                Arrays.sort(
+                    files, 
+                    (first, second) -> Long.compare(first.lastModified(), second.lastModified()));
+
+            } else if (sortBy == DATE_DESCENDING) {
+                Arrays.sort(
+                    files, 
+                    (first, second) -> Long.compare(second.lastModified(), first.lastModified()));
             }
 
-            for (File file : filesList) {
+            for (File file : files) {
                 node.add(new DefaultMutableTreeNode(file));
             }
 		}

@@ -2,6 +2,8 @@ package main;
 
 import java.io.File;
 
+import main.views.FileBrowser;
+
 public class ComplierState {
     public static String previousClipboard = "";
 
@@ -11,4 +13,6 @@ public class ComplierState {
 
 	public static boolean isTracking = false;
 	public static boolean multiLineAutosave = true;
+
+    public static int fileSortBy = FileBrowser.NAME_ASCENDING;
 }

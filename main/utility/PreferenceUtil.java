@@ -5,6 +5,7 @@ import java.util.prefs.Preferences;
 
 import main.ComplierState;
 import main.MainWindow;
+import main.views.FileBrowser;
 
 public class PreferenceUtil {
     final static String outputFolderKey = "Output Folder";
@@ -14,6 +15,7 @@ public class PreferenceUtil {
     final static String zeroesKey = "Zeroes";
     final static String fileNameKey = "File Name";
     final static String autosaveKey = "Autosave";
+    final static String fileSortByKey = "File Sort By";
 
     /**
      * Saves all preferences from textfields and autosave checkbox
@@ -31,6 +33,7 @@ public class PreferenceUtil {
         prefs.put(zeroesKey, mainWindow.leadingZerosTextField.getText());
         prefs.put(fileNameKey, mainWindow.fileNameTextField.getText());
         prefs.putBoolean(autosaveKey, ComplierState.multiLineAutosave);
+        prefs.putInt(fileSortByKey, ComplierState.fileSortBy);
     }
 
     /**
@@ -59,7 +62,22 @@ public class PreferenceUtil {
 		mainWindow.numberTextField.setText(number);
 		mainWindow.trailingTextField.setText(trailing);
 		mainWindow.fileNameTextField.setText(fileName);
-		mainWindow.leadingZerosTextField.setText(zeros);
+		mainWindow.leadingZerosTextField.setText(zeros);        
+
+        int fileSortBy = prefs.getInt(fileSortByKey, FileBrowser.NAME_ASCENDING);
+        ComplierState.fileSortBy = fileSortBy;
+        if (fileSortBy == FileBrowser.NAME_ASCENDING) {
+            mainWindow.sortByNameButton.setIcon(mainWindow.upIcon);
+
+        } else if (fileSortBy == FileBrowser.NAME_DESCENDING) {
+            mainWindow.sortByNameButton.setIcon(mainWindow.downIcon);
+
+        } else if (fileSortBy == FileBrowser.DATE_ASCENDING) {
+            mainWindow.sortByDateButton.setIcon(mainWindow.upIcon);
+
+        } else if (fileSortBy == FileBrowser.DATE_DESCENDING) {
+            mainWindow.sortByDateButton.setIcon(mainWindow.downIcon);
+        }
 
 		File outputFile = new File(output);
 		if (outputFile.exists()) {
@@ -68,7 +86,7 @@ public class PreferenceUtil {
 			mainWindow.outputFolderTextField.setText(output);
 
             //Set starting directory of fileBrowser to previously store folder
-            mainWindow.fileBrowser.buildTreeFromPath(outputFile.getAbsolutePath());
+            mainWindow.fileBrowser.buildTreeFromPath(outputFile.getAbsolutePath(), fileSortBy);
 		}
     }
 }
