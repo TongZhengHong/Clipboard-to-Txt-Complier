@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.io.File;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -34,10 +35,13 @@ public class MainWindow extends JFrame {
 	public JButton fileChooserButton = new JButton("Choose folder");
 
 	// Center section
+	public ImageIcon upIcon = new ImageIcon(getClass().getResource("../images/up_arrow.png"));
+	public ImageIcon downIcon = new ImageIcon(getClass().getResource("../images/down_arrow.png"));
+
 	public JButton backButton = new JButton("Back");
 	public JButton refreshButton = new JButton("Refresh");
-	public JButton openButton = new JButton("Open");
-	public JButton renameButton = new JButton("Rename");
+	public JButton sortByNameButton = new JButton("Sort Name");
+	public JButton sortByDateButton = new JButton("Sort Date");
 	public JButton showExplorerButton = new JButton("Show in Explorer");
 	public JButton duplicateClipboardButton = new JButton("Duplicate Clipboard");
 
@@ -185,11 +189,17 @@ public class MainWindow extends JFrame {
 		fileBrowserPanel.setBorder(BorderFactory.createTitledBorder("Current Folder"));
 		clipboardPanel.setBorder(BorderFactory.createTitledBorder("File Viewer"));
 		currentFilePanel.setBorder(BorderFactory.createTitledBorder("Current Text File"));
+		
+		sortByNameButton.setIcon(upIcon);
+		sortByNameButton.setHorizontalTextPosition(AbstractButton.LEADING); 
+		sortByDateButton.setIcon(upIcon);
+		sortByDateButton.setIcon(downIcon);
+		sortByDateButton.setHorizontalTextPosition(AbstractButton.LEADING); 
 
 		fileControlPanel.add(backButton);
 		fileControlPanel.add(refreshButton);
-		fileControlPanel.add(renameButton);
-		fileControlPanel.add(openButton);
+		fileControlPanel.add(sortByNameButton);
+		fileControlPanel.add(sortByDateButton);
 
 		fileBrowserPanel.add(fileControlPanel);
 		fileBrowserPanel.add(fileBrowser);

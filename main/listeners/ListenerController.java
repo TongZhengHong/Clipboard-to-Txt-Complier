@@ -76,13 +76,11 @@ public class ListenerController implements ClipboardInterface {
 		mainWindow.refreshButton.setActionCommand("Refresh");
 		mainWindow.refreshButton.addActionListener(buttonActionListener);
 
-		mainWindow.openButton.setMnemonic(KeyEvent.VK_O);
-		mainWindow.openButton.setActionCommand("Open File");
-		mainWindow.openButton.addActionListener(buttonActionListener);
+		mainWindow.sortByNameButton.setActionCommand("Sort by Name");
+		mainWindow.sortByNameButton.addActionListener(buttonActionListener);
 
-		mainWindow.renameButton.setMnemonic(KeyEvent.VK_R);
-		mainWindow.renameButton.setActionCommand("Rename File");
-		mainWindow.renameButton.addActionListener(buttonActionListener);
+		mainWindow.sortByDateButton.setActionCommand("Sort by Date");
+		mainWindow.sortByDateButton.addActionListener(buttonActionListener);
 
 		mainWindow.showExplorerButton.setMnemonic(KeyEvent.VK_E);
 		mainWindow.showExplorerButton.setActionCommand("Show Explorer");
