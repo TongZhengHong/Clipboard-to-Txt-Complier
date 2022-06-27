@@ -1,7 +1,6 @@
 package main.listeners;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -73,6 +72,7 @@ public class ListenerController implements ClipboardInterface {
 		mainWindow.backButton.setActionCommand("Back");
 		mainWindow.backButton.addActionListener(buttonActionListener);
 
+		mainWindow.refreshButton.setMnemonic(KeyEvent.VK_R);
 		mainWindow.refreshButton.setActionCommand("Refresh");
 		mainWindow.refreshButton.addActionListener(buttonActionListener);
 
@@ -95,7 +95,7 @@ public class ListenerController implements ClipboardInterface {
 		mainWindow.saveButton.addActionListener(buttonActionListener);
 
 		// Add accelerator for save button
-		KeyStroke keySave = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
+		KeyStroke keySave = KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK);
 		Action performSave = new AbstractAction("Save") {
 			public void actionPerformed(ActionEvent e) {
 				uiUtil.saveFile();
