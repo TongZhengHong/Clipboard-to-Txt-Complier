@@ -1,7 +1,6 @@
 package main.listeners;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -21,11 +20,10 @@ import main.listeners.file_browser.FilePopupMenuListener;
 import main.listeners.text_field.FileNameDocumentListener;
 import main.listeners.text_field.OutputFolderDocumentListener;
 import main.misc.IntegerFilter;
-import main.utility.FileUtil;
 import main.utility.UiUtil;
 import main.ComplierState;
 
-public class ListenerController implements ActionListener, ClipboardInterface {
+public class ListenerController implements ClipboardInterface {
 	MainWindow mainWindow;
 	UiUtil uiUtil;
 
@@ -46,46 +44,57 @@ public class ListenerController implements ActionListener, ClipboardInterface {
 	private void setupListeners() {
 		mainWindow.addWindowListener(new WindowCloseListener(mainWindow));
 
+		buttonListeners();
+
 		textFieldListeners();
 
 		fileBrowserListeners();
 
 		checkBoxListeners();
+	}
+
+	@Override
+	public void onClipboardUpdate(String data) {
+		uiUtil.handleClipboardUpdate(data);
+	}
+
+	private void buttonListeners() {
+		ButtonActionListener buttonActionListener = new ButtonActionListener(mainWindow, uiUtil);
 
 		mainWindow.startStopButton.setMnemonic(KeyEvent.VK_S);
 		mainWindow.startStopButton.setActionCommand("Start");
-		mainWindow.startStopButton.addActionListener(this);
+		mainWindow.startStopButton.addActionListener(buttonActionListener);
 
 		mainWindow.fileChooserButton.setMnemonic(KeyEvent.VK_C);
 		mainWindow.fileChooserButton.setActionCommand("Choose Folder");
-		mainWindow.fileChooserButton.addActionListener(this);
+		mainWindow.fileChooserButton.addActionListener(buttonActionListener);
 
 		mainWindow.backButton.setMnemonic(KeyEvent.VK_B);
 		mainWindow.backButton.setActionCommand("Back");
-		mainWindow.backButton.addActionListener(this);
+		mainWindow.backButton.addActionListener(buttonActionListener);
 
 		mainWindow.refreshButton.setActionCommand("Refresh");
-		mainWindow.refreshButton.addActionListener(this);
+		mainWindow.refreshButton.addActionListener(buttonActionListener);
 
 		mainWindow.openButton.setMnemonic(KeyEvent.VK_O);
 		mainWindow.openButton.setActionCommand("Open File");
-		mainWindow.openButton.addActionListener(this);
+		mainWindow.openButton.addActionListener(buttonActionListener);
 
 		mainWindow.renameButton.setMnemonic(KeyEvent.VK_R);
 		mainWindow.renameButton.setActionCommand("Rename File");
-		mainWindow.renameButton.addActionListener(this);
+		mainWindow.renameButton.addActionListener(buttonActionListener);
 
 		mainWindow.showExplorerButton.setMnemonic(KeyEvent.VK_E);
 		mainWindow.showExplorerButton.setActionCommand("Show Explorer");
-		mainWindow.showExplorerButton.addActionListener(this);
+		mainWindow.showExplorerButton.addActionListener(buttonActionListener);
 
 		mainWindow.duplicateClipboardButton.setMnemonic(KeyEvent.VK_D);
 		mainWindow.duplicateClipboardButton.setActionCommand("Duplicate");
-		mainWindow.duplicateClipboardButton.addActionListener(this);
+		mainWindow.duplicateClipboardButton.addActionListener(buttonActionListener);
 
 		mainWindow.saveButton.setToolTipText("Save file (Ctrl+S)");
 		mainWindow.saveButton.setActionCommand("Save File");
-		mainWindow.saveButton.addActionListener(this);
+		mainWindow.saveButton.addActionListener(buttonActionListener);
 
 		// Add accelerator for save button
 		KeyStroke keySave = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
@@ -100,64 +109,6 @@ public class ListenerController implements ActionListener, ClipboardInterface {
 		mainWindow.fileViewerTextArea.setEditable(false);
 		mainWindow.clipboardTextArea.setEditable(false);
 		MainWindow.console.setEditable(false);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		String command = e.getActionCommand();
-		if (command.equals("Start")) {
-			ComplierState.isTracking = true;
-			mainWindow.statusLabel.setText("Status: Tracking");
-
-			mainWindow.startStopButton.setText("Stop");
-			mainWindow.startStopButton.setActionCommand("Stop");
-
-			System.out.println("Start tracking clipboard changes...");
-			MainWindow.consoleLog("Start tracking clipboard changes...");
-
-		} else if (command.equals("Stop")) {
-			ComplierState.isTracking = false;
-			mainWindow.statusLabel.setText("Status: Idle");
-
-			mainWindow.startStopButton.setText("Start");
-			mainWindow.startStopButton.setActionCommand("Start");
-
-			System.out.println("Stop tracking clipboard changes...");
-			MainWindow.consoleLog("Stop tracking clipboard changes...");
-
-		} else if (command.equals("Choose Folder")) {
-			String filePath = FileUtil.chooseFolder(mainWindow);
-			if (filePath != null)
-				mainWindow.outputFolderTextField.setText(filePath);
-
-		} else if (command.equals("Back")) {
-			if (ComplierState.parentDirectory == null || !ComplierState.parentDirectory.exists())
-				return;
-			mainWindow.outputFolderTextField.setText(ComplierState.parentDirectory.getAbsolutePath());
-
-		} else if (command.equals("Refresh")) {
-			uiUtil.updateFileBrowser();
-
-		} else if (command.equals("Show Explorer")) {
-			FileUtil.showFileExplorer(ComplierState.currentDirectory);
-
-		} else if (command.equals("Open File")) {
-			FileUtil.open(ComplierState.selectedFile);
-
-		} else if (command.equals("Rename File")) {
-			uiUtil.renameFile();
-
-		} else if (command.equals("Save File")) {
-			uiUtil.saveFile();
-
-		} else if (command.equals("Duplicate")) {
-			uiUtil.duplicateClipboard();
-		}
-	}
-
-	@Override
-	public void onClipboardUpdate(String data) {
-		uiUtil.handleClipboardUpdate(data);
 	}
 
 	private void textFieldListeners() {
