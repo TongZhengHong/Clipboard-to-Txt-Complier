@@ -14,7 +14,7 @@ public class PreferenceUtil {
     final static String trailingKey = "Trailing";
     final static String zeroesKey = "Zeroes";
     final static String fileNameKey = "File Name";
-    final static String autosaveKey = "Autosave";
+    final static String incrementNumberKey = "Increment Number";
     final static String fileSortByKey = "File Sort By";
 
     /**
@@ -32,7 +32,7 @@ public class PreferenceUtil {
         prefs.put(trailingKey, mainWindow.trailingTextField.getText());
         prefs.put(zeroesKey, mainWindow.leadingZerosTextField.getText());
         prefs.put(fileNameKey, mainWindow.fileNameTextField.getText());
-        prefs.putBoolean(autosaveKey, ComplierState.multiLineAutosave);
+        prefs.putBoolean(incrementNumberKey, ComplierState.incrementNumber);
         prefs.putInt(fileSortByKey, ComplierState.fileSortBy);
     }
 
@@ -47,9 +47,9 @@ public class PreferenceUtil {
     public static void loadPreferences(MainWindow mainWindow) {
         Preferences prefs = Preferences.userNodeForPackage(PreferenceUtil.class);
 
-        boolean autosave = prefs.getBoolean(autosaveKey, false);
-		mainWindow.autoSaveCheckBox.setSelected(autosave);
-        ComplierState.multiLineAutosave = autosave;
+        boolean incrementNum = prefs.getBoolean(incrementNumberKey, false);
+		mainWindow.incrementCheckBox.setSelected(incrementNum);
+        ComplierState.incrementNumber = incrementNum;
 
 		String output = prefs.get(outputFolderKey, "");
 		String leading = prefs.get(leadingKey, "");

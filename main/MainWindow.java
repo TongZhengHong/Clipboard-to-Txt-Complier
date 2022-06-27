@@ -51,7 +51,7 @@ public class MainWindow extends JFrame {
 
 	// Bottom section
 	public JTextArea clipboardTextArea = new JTextArea(2, 80);
-	public JCheckBox autoSaveCheckBox = new JCheckBox("Auto save file if clipboard has multiple lines");
+	public JCheckBox incrementCheckBox = new JCheckBox("Increment number after save");
 	public JButton saveButton = new JButton("Save Manually");
 	public static JTextArea console = new JTextArea(4, 80);
 
@@ -248,7 +248,7 @@ public class MainWindow extends JFrame {
 		clipboardScroll.setViewportView(clipboardTextArea);
 
 		bottomRow.setLayout(new BoxLayout(bottomRow, BoxLayout.X_AXIS));
-		bottomRow.add(autoSaveCheckBox);
+		bottomRow.add(incrementCheckBox);
 		bottomRow.add(Box.createRigidArea(new Dimension(15, 0)));
 		bottomRow.add(fileNameLabel);
 		bottomRow.add(fileNameTextField);

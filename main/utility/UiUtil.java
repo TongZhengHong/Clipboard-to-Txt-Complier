@@ -102,6 +102,9 @@ public class UiUtil {
 
             mainWindow.fileBrowser.buildTreeFromPath(tempPath, ComplierState.fileSortBy);
         }
+
+        // Reset fileViewer after updating fileBrowser
+        mainWindow.fileViewerTextArea.setText("");
     }
 
     /**
@@ -193,7 +196,15 @@ public class UiUtil {
 		mainWindow.fileViewerTextArea.setText("");
 	}
 
-    private void handleClipboardUpdate(String clipboardText, boolean checkAutoSave) {
+    /**
+     * Appends incoming text to current text file. Show new clipboard text 
+     * in <code>clipboardTextArea</code>. Bring cursor to start of last line 
+     * for <code>currentFileTextArea</code> and <code>clipboardTextArea</code> 
+     * for easier viewing of text area content.
+     * 
+     * @param clipboardText New clipboard text to be shown
+     */
+    public void handleClipboardUpdate(String clipboardText) {
         // Do not handle clipboard changes if NOT tracking
         if (!ComplierState.isTracking)
             return;
@@ -212,18 +223,12 @@ public class UiUtil {
 
         bringCursorToStart(mainWindow.currentFileTextArea);
         bringCursorToStart(mainWindow.clipboardTextArea);
-
-        // Save file if clipboard has multiple lines
-        if (checkAutoSave && ComplierState.multiLineAutosave) {
-            if (clipboardText.contains("\n"))
-                saveFile();
-        }
     }
 
-    public void handleClipboardUpdate(String clipboardText) {
-        handleClipboardUpdate(clipboardText, true);
-    }
-
+    /**
+     * Duplicates previous clipboard text by appending to the current text
+     * file. Show warning in console if previous clipboard is empty
+     */
     public void duplicateClipboard() {
         String previousClipboard = mainWindow.clipboardTextArea.getText();
 
@@ -231,8 +236,8 @@ public class UiUtil {
             System.out.println("Previous clipboard is empty!");
             MainWindow.consoleLog("Previous clipboard is empty!");
         } else
-            // Do not check autosave, duplicate previous clipboard even with newline
-            handleClipboardUpdate(ComplierState.previousClipboard, false);
+            // Duplicate previous clipboard even with newline
+            handleClipboardUpdate(ComplierState.previousClipboard);
     }
 
     /**
@@ -350,7 +355,9 @@ public class UiUtil {
             // Update file browser to show new file
             updateFileBrowser();
 
-            incrementNumberTextField();
+            // Only increment number if checkbox is ticked
+            if (ComplierState.incrementNumber)
+                incrementNumberTextField();
         }
     }
 }

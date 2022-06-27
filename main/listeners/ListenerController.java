@@ -149,12 +149,12 @@ public class ListenerController implements ClipboardInterface {
 	}
 
 	private void checkBoxListeners() {
-		mainWindow.autoSaveCheckBox.addItemListener(new ItemListener() {
+		mainWindow.incrementCheckBox.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				Object source = e.getItemSelectable();
-				if (source == mainWindow.autoSaveCheckBox) {
-					ComplierState.multiLineAutosave = e.getStateChange() == 1;
+				if (source == mainWindow.incrementCheckBox) {
+					ComplierState.incrementNumber = e.getStateChange() == 1;
 				}
 			}
 		});

@@ -12,7 +12,7 @@ public class ComplierState {
 	public static File parentDirectory = null;
 
 	public static boolean isTracking = false;
-	public static boolean multiLineAutosave = true;
+	public static boolean incrementNumber = true;
 
     public static int fileSortBy = FileBrowser.NAME_ASCENDING;
 }
