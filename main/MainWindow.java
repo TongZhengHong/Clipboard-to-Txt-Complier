@@ -35,8 +35,8 @@ public class MainWindow extends JFrame {
 	public JButton fileChooserButton = new JButton("Choose folder");
 
 	// Center section
-	public ImageIcon upIcon = new ImageIcon(getClass().getResource("../images/up_arrow.png"));
-	public ImageIcon downIcon = new ImageIcon(getClass().getResource("../images/down_arrow.png"));
+	public ImageIcon upIcon = new ImageIcon(getClass().getResource("images/up_arrow.png"));
+	public ImageIcon downIcon = new ImageIcon(getClass().getResource("images/down_arrow.png"));
 
 	public JButton backButton = new JButton("Back");
 	public JButton refreshButton = new JButton("Refresh");
@@ -66,7 +66,7 @@ public class MainWindow extends JFrame {
 	public MainWindow(String title) {
 		setTitle(title);
 
-		ImageIcon icon = new ImageIcon(getClass().getResource("../images/clipboard.png"));
+		ImageIcon icon = new ImageIcon(getClass().getResource("images/clipboard.png"));
 		setIconImage(icon.getImage());
 
 		FileSystemView sys = FileSystemView.getFileSystemView();
