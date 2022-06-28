@@ -41,7 +41,7 @@ public class ButtonActionListener implements ActionListener {
 			MainWindow.consoleLog("Stop tracking clipboard changes...");
 
 		} else if (command.equals("Choose Folder")) {
-			String filePath = FileUtil.chooseFolder(mainWindow);
+			String filePath = FileUtil.chooseFolder(mainWindow, ComplierState.currentDirectory);
 			if (filePath != null)
 				mainWindow.outputFolderTextField.setText(filePath);
 

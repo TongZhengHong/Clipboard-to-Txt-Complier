@@ -42,8 +42,9 @@ public class FileUtil {
         }
     }
 
-    public static String chooseFolder(Component context) {
+    public static String chooseFolder(Component context, File currentDirectory) {
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fileChooser.setCurrentDirectory(currentDirectory);
 
         int returnVal = fileChooser.showOpenDialog(context);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
