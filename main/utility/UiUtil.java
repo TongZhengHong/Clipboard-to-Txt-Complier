@@ -324,7 +324,8 @@ public class UiUtil {
             return;
         }
 
-        String filePathString = fileDirectory + "\\" + fileName + ".txt";
+        String fileSeparator = System.getProperty("file.separator");
+        String filePathString = fileDirectory + fileSeparator + fileName + ".txt";
         File tempFile = new File(filePathString);
 
         // Ask user to override if there is an existing file
