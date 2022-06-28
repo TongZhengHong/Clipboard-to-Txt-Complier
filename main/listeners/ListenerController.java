@@ -141,6 +141,9 @@ public class ListenerController implements ClipboardInterface {
 		mainWindow.fileBrowserPopupMenu.openMenuItem.setActionCommand("open");
 		mainWindow.fileBrowserPopupMenu.openMenuItem.addActionListener(popupMenuListener);
 
+		mainWindow.fileBrowserPopupMenu.openNotepadMenuItem.setActionCommand("open notepad");
+		mainWindow.fileBrowserPopupMenu.openNotepadMenuItem.addActionListener(popupMenuListener);
+
 		mainWindow.fileBrowserPopupMenu.renameMenuItem.setActionCommand("rename");
 		mainWindow.fileBrowserPopupMenu.renameMenuItem.addActionListener(popupMenuListener);
 

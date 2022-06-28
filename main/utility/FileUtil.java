@@ -65,7 +65,7 @@ public class FileUtil {
         }
     }
 
-    public static void open(File selectedFile) {
+    public static void open(File selectedFile, boolean openNotepadPlusPlus) {
         if (selectedFile == null || !selectedFile.exists()) {
             System.out.println("Please select a file to open!");
             MainWindow.consoleLog("Please select a file to open!");
@@ -79,7 +79,24 @@ public class FileUtil {
             return;
         }
 
-        if (desktop.isSupported(Desktop.Action.OPEN)) {
+        if (openNotepadPlusPlus) {
+            try {
+                fileName = '"' + fileName + '"';
+                ProcessBuilder processBuilder = new ProcessBuilder();
+                String command = "start notepad++ " + fileName;
+                processBuilder.command("CMD", "/C", command);
+                processBuilder.start();
+
+                System.out.println("Opening in Notepad++: " + fileName);
+                MainWindow.consoleLog("Opening in Notepad++: " + fileName);
+    
+            } catch (Exception e) {
+                e.printStackTrace();
+                MainWindow.consoleLog("Error occured while opening: " + fileName);
+                MainWindow.consoleLog("Does your system have notepad++ installed?");
+            }
+
+        } else if (desktop.isSupported(Desktop.Action.OPEN)) {
             try {
                 desktop.open(selectedFile);
                 System.out.println("Opening: " + fileName);

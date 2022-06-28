@@ -48,7 +48,7 @@ public class FileBrowserMouseListener implements MouseListener {
 
         } else if (e.getClickCount() == 2) {
             // Double click detected: Open text file
-			FileUtil.open(ComplierState.selectedFile);
+			FileUtil.open(ComplierState.selectedFile, false);
         }
     }
 

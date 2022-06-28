@@ -18,8 +18,11 @@ public class FilePopupMenuListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command == "open") {
-			FileUtil.open(ComplierState.selectedFile);
+			FileUtil.open(ComplierState.selectedFile, false);
             
+        } else if (command == "open notepad") {
+			FileUtil.open(ComplierState.selectedFile, true);
+
         } else if (command == "rename") {
 			uiUtil.renameFile();
 
