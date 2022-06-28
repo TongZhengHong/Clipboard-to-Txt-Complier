@@ -241,27 +241,31 @@ public class UiUtil {
      * Only allows text (.txt) files to be renamed.
      * </p>
      */
-    public void renameFile() {
-        File file = ComplierState.selectedFile;
-
-        if (file == null || !file.exists()) {
+    public void renameFile(File selectedFile) {
+        if (selectedFile == null || !selectedFile.exists()) {
             System.out.println("Please select a file to rename!");
             MainWindow.consoleLog("Please select a file to rename!");
             return;
         }
 
-        if (!FileUtil.isTxtFile(file)) {
+        if (!FileUtil.isTxtFile(selectedFile)) {
             System.out.println("Only allowed to rename text (.txt) files!");
             MainWindow.consoleLog("Only allowed to rename text (.txt) files!");
             return;
         }
 
-        String renamedFileName = DialogUtil.showRenameDialog(mainWindow, file);
+        String renamedFileName = DialogUtil.showRenameDialog(mainWindow, selectedFile);
         // User cancel, empty file name or same file name
         if (renamedFileName == null)
             return;
 
-        boolean renameSuccess = FileUtil.rename(file, renamedFileName);
+        File renamedFile = new File(selectedFile.getParentFile(), renamedFileName);
+        if (renamedFile.exists()) {
+            boolean confirmRename = DialogUtil.showConfirmRenameDialog(mainWindow);
+            if (!confirmRename) return;
+        }
+
+        boolean renameSuccess = FileUtil.rename(selectedFile, renamedFileName);
         if (renameSuccess)
             updateFileBrowser();
     }
@@ -324,11 +328,9 @@ public class UiUtil {
             return;
         }
 
-        String filePathString = fileDirectory + "\\" + fileName + ".txt";
-        File tempFile = new File(filePathString);
-
+        File fileToSave = new File(fileDirectory, fileName + ".txt");
         // Ask user to override if there is an existing file
-        if (tempFile.exists()) {
+        if (fileToSave.exists()) {
             boolean confirmSave = DialogUtil.showConfirmSaveDialog(mainWindow);
 
             // User chooses NOT to override file, abort saving file
@@ -339,7 +341,7 @@ public class UiUtil {
             }
         }
 
-        boolean saveSuccess = FileUtil.save(filePathString, currentText);
+        boolean saveSuccess = FileUtil.save(fileToSave.getAbsolutePath(), currentText);
         if (saveSuccess) {
             // Reset current file text
             mainWindow.currentFileTextArea.setText("");

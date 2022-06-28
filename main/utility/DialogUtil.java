@@ -18,6 +18,17 @@ public class DialogUtil {
         return confirmDialogResult == JOptionPane.YES_OPTION;
     }
 
+    public static boolean showConfirmRenameDialog(Component context) {
+        int confirmDialogResult = JOptionPane.showConfirmDialog(
+                context,
+                "File name already exists! Would you like to override the existing file?",
+                "Rename File",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        return confirmDialogResult == JOptionPane.YES_OPTION;
+    }
+
     public static boolean showConfirmDeleteDialog(Component context) {
         int confirmDialogResult = JOptionPane.showConfirmDialog(
                 context,

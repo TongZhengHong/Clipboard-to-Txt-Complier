@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import javax.swing.JFileChooser;
 
@@ -113,7 +114,7 @@ public class FileUtil {
     public static boolean rename(File selectedFile, String renamedString) {
         Path source = Paths.get(selectedFile.getAbsolutePath());
         try {
-            Files.move(source, source.resolveSibling(renamedString));
+            Files.move(source, source.resolveSibling(renamedString), StandardCopyOption.ATOMIC_MOVE);
             System.out.println("Successfully renamed file to: " + renamedString);
             MainWindow.consoleLog("Successfully renamed file to: " + renamedString);
             return true;

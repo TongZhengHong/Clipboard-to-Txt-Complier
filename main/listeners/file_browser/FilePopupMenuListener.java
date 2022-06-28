@@ -24,7 +24,7 @@ public class FilePopupMenuListener implements ActionListener {
 			FileUtil.open(ComplierState.selectedFile, true);
 
         } else if (command == "rename") {
-			uiUtil.renameFile();
+			uiUtil.renameFile(ComplierState.selectedFile);
 
         } else if (command == "delete") {
             uiUtil.deleteFile(ComplierState.selectedFile);
