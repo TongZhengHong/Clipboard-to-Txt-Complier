@@ -116,17 +116,13 @@ public class UiUtil {
         int result = FileBrowser.NAME_ASCENDING;
 		mainWindow.sortByNameButton.setIcon(mainWindow.upIcon);
 
-        if (ComplierState.fileSortBy == FileBrowser.NORMAL_ORDER) {
-            result = FileBrowser.NAME_ASCENDING;
-			mainWindow.sortByNameButton.setIcon(mainWindow.upIcon);
-
-        } else if (ComplierState.fileSortBy == FileBrowser.NAME_ASCENDING) {
+        if (ComplierState.fileSortBy == FileBrowser.NAME_ASCENDING) {
             result = FileBrowser.NAME_DESCENDING;
             mainWindow.sortByNameButton.setIcon(mainWindow.downIcon);
 
         } else if (ComplierState.fileSortBy == FileBrowser.NAME_DESCENDING) {
-            result = FileBrowser.NORMAL_ORDER;
-            mainWindow.sortByNameButton.setIcon(null);
+            result = FileBrowser.NAME_ASCENDING;
+            mainWindow.sortByNameButton.setIcon(mainWindow.upIcon);
 
         } else {
             // Previous sort criteria is by DATE so now set it to no icon
@@ -142,20 +138,16 @@ public class UiUtil {
      * Remove icon on SortByName if previous criteria was by name.
      */
     public void toggleSortByDate() {
-        int result = FileBrowser.DATE_ASCENDING;
-		mainWindow.sortByDateButton.setIcon(mainWindow.upIcon);
+        int result = FileBrowser.DATE_DESCENDING;
+		mainWindow.sortByDateButton.setIcon(mainWindow.downIcon);
 
-        if (ComplierState.fileSortBy == FileBrowser.NORMAL_ORDER) {
-            result = FileBrowser.DATE_ASCENDING;
-            mainWindow.sortByDateButton.setIcon(mainWindow.upIcon);
-
-        } else if (ComplierState.fileSortBy == FileBrowser.DATE_ASCENDING) {
+        if (ComplierState.fileSortBy == FileBrowser.DATE_ASCENDING) {
             result = FileBrowser.DATE_DESCENDING;
 			mainWindow.sortByDateButton.setIcon(mainWindow.downIcon);
 
         } else if (ComplierState.fileSortBy == FileBrowser.DATE_DESCENDING) {
-            result = FileBrowser.NORMAL_ORDER;
-            mainWindow.sortByDateButton.setIcon(null);
+            result = FileBrowser.DATE_ASCENDING;
+            mainWindow.sortByDateButton.setIcon(mainWindow.upIcon);
 
         } else {
             // Previous sort criteria is by NAME so now set it to no icon

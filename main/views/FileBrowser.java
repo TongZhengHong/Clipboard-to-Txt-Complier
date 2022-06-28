@@ -3,8 +3,9 @@ package main.views;
 import java.awt.event.MouseListener;
 
 import java.io.File;
-
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -21,7 +22,6 @@ public class FileBrowser extends JScrollPane {
     public final static int NAME_DESCENDING = 1;
     public final static int DATE_ASCENDING = 2;
     public final static int DATE_DESCENDING = 3;
-    public final static int NORMAL_ORDER = 4;
 
 	private JTree tree;
 	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
@@ -57,25 +57,51 @@ public class FileBrowser extends JScrollPane {
 
 			File[] files = fileSystemView.getFiles(fileSystemRoot, true);
 
+            List<File> filesList = new ArrayList<File>();
+            List<File> foldersList = new ArrayList<File>();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    foldersList.add(file);
+                } else if (file.isFile()) {
+                    filesList.add(file);
+                }
+            }
+
             if (sortBy == NAME_ASCENDING) {
-                Arrays.sort(files, new FileNameComparator(true));
+                Collections.sort(filesList, new FileNameComparator(true));
+                Collections.sort(foldersList, new FileNameComparator(true));
 
             } else if (sortBy == NAME_DESCENDING) {
-                Arrays.sort(files, new FileNameComparator(false));
+                Collections.sort(filesList, new FileNameComparator(false));
+                Collections.sort(foldersList, new FileNameComparator(false));
 
             } else if (sortBy == DATE_ASCENDING) {
-                Arrays.sort(
-                    files, 
+                Collections.sort(
+                    filesList, 
+                    (first, second) -> Long.compare(first.lastModified(), second.lastModified()));
+                Collections.sort(
+                    foldersList, 
                     (first, second) -> Long.compare(first.lastModified(), second.lastModified()));
 
             } else if (sortBy == DATE_DESCENDING) {
-                Arrays.sort(
-                    files, 
+                Collections.sort(
+                    filesList, 
+                    (first, second) -> Long.compare(second.lastModified(), first.lastModified()));
+                Collections.sort(
+                    foldersList, 
                     (first, second) -> Long.compare(second.lastModified(), first.lastModified()));
             }
 
-            for (File file : files) {
-                node.add(new DefaultMutableTreeNode(file));
+            if (sortBy == NAME_ASCENDING || sortBy == DATE_ASCENDING) {
+                for (File file : foldersList) 
+                    node.add(new DefaultMutableTreeNode(file));
+                for (File file : filesList) 
+                    node.add(new DefaultMutableTreeNode(file));
+            } else {
+                for (File file : filesList) 
+                    node.add(new DefaultMutableTreeNode(file));
+                for (File file : foldersList) 
+                    node.add(new DefaultMutableTreeNode(file));
             }
 		}
 
