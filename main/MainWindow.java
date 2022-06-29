@@ -50,10 +50,10 @@ public class MainWindow extends JFrame {
 	public JTextArea currentFileTextArea = new JTextArea();
 
 	// Bottom section
-	public JTextArea clipboardTextArea = new JTextArea(2, 80);
+	public JTextArea clipboardTextArea = new JTextArea(2, 100);
 	public JCheckBox incrementCheckBox = new JCheckBox("Increment number after save");
 	public JButton saveButton = new JButton("Save Manually");
-	public static JTextArea console = new JTextArea(4, 80);
+	public static JTextArea console = new JTextArea(4, 100);
 
 	// Text Fields
 	public JTextField leadingZerosTextField = new JTextField();
@@ -117,7 +117,7 @@ public class MainWindow extends JFrame {
 	private JPanel createTopSection() {
 		JPanel topPanel = new JPanel();
 
-		JLabel leadingZerosLabel = new JLabel("Leading Zeros: ");
+		JLabel leadingZerosLabel = new JLabel("Pad zeroes: ");
 		JPanel statusPanel = new JPanel();
 		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
 		statusPanel.add(startStopButton);
@@ -146,7 +146,7 @@ public class MainWindow extends JFrame {
 		textFileNamePanel.add(leadingLabel);
 		textFileNamePanel.add(leadingTextField);
 		textFileNamePanel.add(Box.createRigidArea(new Dimension(10, 0)));
-		JLabel numberLabel = new JLabel("Start No: ");
+		JLabel numberLabel = new JLabel("Number: ");
 		textFileNamePanel.add(numberLabel);
 		textFileNamePanel.add(numberTextField);
 		textFileNamePanel.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -186,7 +186,7 @@ public class MainWindow extends JFrame {
 		clipboardPanel.setLayout(new BoxLayout(clipboardPanel, BoxLayout.Y_AXIS));
 		currentFilePanel.setLayout(new BoxLayout(currentFilePanel, BoxLayout.Y_AXIS));
 
-		fileBrowserPanel.setBorder(BorderFactory.createTitledBorder("Current Folder"));
+		fileBrowserPanel.setBorder(BorderFactory.createTitledBorder("File Browser"));
 		clipboardPanel.setBorder(BorderFactory.createTitledBorder("File Viewer"));
 		currentFilePanel.setBorder(BorderFactory.createTitledBorder("Current Text File"));
 		
