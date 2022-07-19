@@ -2,6 +2,11 @@
 
 Clipboard to Txt complier is a Java program that helps to compile user copied content into text files. It listens to clipboard changes and temporarily stores them together before user save it in a .txt file. Comes with in an in-built file browser and file viewer section to help manage and view saved text files.
 
+<!-- Screenshot of program -->
+<p align="center">
+    <img src="./main/images/mainWindow.png" width="600">
+</p>
+
 ## Installation
 
 Compiled versions of the ClipboardToTxt can be found in the `output_rar` directory. Download the latest version and extract the rar file to a desired folder. Launch the .exe file within the extracted folder to start using ClipboardToTxt complier.
