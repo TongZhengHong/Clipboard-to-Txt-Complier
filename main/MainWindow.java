@@ -3,6 +3,11 @@ package main;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.GraphicsConfiguration;
+import java.awt.Rectangle;
+import java.awt.Insets;
+import java.awt.Toolkit;
+
 import java.io.File;
 
 import javax.swing.AbstractButton;
@@ -105,10 +110,24 @@ public class MainWindow extends JFrame {
 		add(topPanel, BorderLayout.NORTH);
 		add(centerPanel, BorderLayout.CENTER);
 		add(bottomPanel, BorderLayout.SOUTH);
-		setLocationRelativeTo(null);
+
 		pack();
+		moveWindowToBottomRight();
 		setMinimumSize(getSize());
 		setVisible(true);
+	}
+
+	private void moveWindowToBottomRight() {
+		GraphicsConfiguration config = this.getGraphicsConfiguration();
+		Rectangle bounds = config.getBounds();
+		Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(config);
+
+		bounds.x += insets.left;
+		bounds.y += insets.top;
+
+		int dx = bounds.x + bounds.width - this.getWidth();
+		int dy = bounds.y + bounds.height - this.getHeight();
+		setLocation(dx, dy);
 	}
 
 	// ==========================================================================================
