@@ -7,4 +7,15 @@ public interface ClipboardInterface {
 	 * @param data
 	 */
 	void onClipboardUpdate(String data);
+
+	/**
+	 * Callback to show dialog to inform user that clipboard listener has crashed
+	 * and give suggestions regarding the potential issues.
+	 */
+	void onClipboardListenerCrash();
+
+	/**
+	 * Callback to show dialog if clipboard listener crash and unable to restart
+	 */
+	void onClipboardListenerDied();
 }

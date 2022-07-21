@@ -6,7 +6,24 @@ import java.io.File;
 import javax.swing.JOptionPane;
 
 public class DialogUtil {
-    
+
+    public static void showClipboardListenerCrashDialog(Component context) {
+        JOptionPane.showMessageDialog(
+                context,
+                "Clipboard Listener has crashed. Please try again and PAUSE in between copy operations.\n" 
+                    + "If error still persists, the program you are copying from may not support copy operations",
+                "Crash",
+                JOptionPane.WARNING_MESSAGE);
+    }
+
+    public static void showClipboardListenerDiedDialog(Component context) {
+        JOptionPane.showMessageDialog(
+                context,
+                "Unable to restart clipboard listener. Please restart the program and try again.",
+                "Restart Program",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
     public static boolean showConfirmSaveDialog(Component context) {
         int confirmDialogResult = JOptionPane.showConfirmDialog(
                 context,

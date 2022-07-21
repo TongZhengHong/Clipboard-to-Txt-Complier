@@ -19,6 +19,7 @@ import main.listeners.file_browser.FilePopupMenuListener;
 import main.listeners.text_field.FileNameDocumentListener;
 import main.listeners.text_field.OutputFolderDocumentListener;
 import main.misc.IntegerFilter;
+import main.utility.DialogUtil;
 import main.utility.UiUtil;
 import main.ComplierState;
 
@@ -30,14 +31,12 @@ public class ListenerController implements ClipboardInterface {
 		this.mainWindow = mainWindow;
 		this.uiUtil = uiUtil;
 
-		setupCustomListeners();
-		setupListeners();
-	}
-
-	private void setupCustomListeners() {
+		// Start listening to clipboard changes
 		ClipboardListener board = new ClipboardListener();
 		board.addClipBoardListener(this);
 		board.start();
+
+		setupListeners();
 	}
 
 	private void setupListeners() {
@@ -55,6 +54,16 @@ public class ListenerController implements ClipboardInterface {
 	@Override
 	public void onClipboardUpdate(String data) {
 		uiUtil.handleClipboardUpdate(data);
+	}
+
+	@Override
+	public void onClipboardListenerCrash() {
+		DialogUtil.showClipboardListenerCrashDialog(mainWindow);
+	}
+
+	@Override
+	public void onClipboardListenerDied() {
+		DialogUtil.showClipboardListenerDiedDialog(mainWindow);
 	}
 
 	private void buttonListeners() {
@@ -103,10 +112,6 @@ public class ListenerController implements ClipboardInterface {
 		};
 		mainWindow.saveButton.getActionMap().put("performSave", performSave);
 		mainWindow.saveButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keySave, "performSave");
-
-		mainWindow.fileViewerTextArea.setEditable(false);
-		mainWindow.clipboardTextArea.setEditable(false);
-		MainWindow.console.setEditable(false);
 	}
 
 	private void textFieldListeners() {
@@ -127,6 +132,11 @@ public class ListenerController implements ClipboardInterface {
 		PlainDocument zerosDoc = (PlainDocument) mainWindow.leadingZerosTextField.getDocument();
 		numberDoc.setDocumentFilter(new IntegerFilter(false));
 		zerosDoc.setDocumentFilter(new IntegerFilter(true));
+
+		// Set editable field for text fields
+		mainWindow.fileViewerTextArea.setEditable(false);
+		mainWindow.clipboardTextArea.setEditable(false);
+		MainWindow.console.setEditable(false);
 	}
 
 	private void fileBrowserListeners() {

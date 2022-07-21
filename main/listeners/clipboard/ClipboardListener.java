@@ -1,5 +1,7 @@
 package main.listeners.clipboard;
 
+import main.MainWindow;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -10,53 +12,86 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 
 public class ClipboardListener extends Thread implements ClipboardOwner {
+	private final int DELAY = 300; // in milliseconds
+
 	private String previousClipBoard = "";
 	private List<ClipboardInterface> listeners = new ArrayList<ClipboardInterface>();
-	private Clipboard sysClip = Toolkit.getDefaultToolkit().getSystemClipboard();
 	
 	public void addClipBoardListener(ClipboardInterface listener) {
 		listeners.add(listener);
 	}
   
 	public void run() {
-		Transferable trans = sysClip.getContents(this);
-		regainOwnership(trans);
+		try {
+			Thread.sleep(DELAY);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		regainClipboardOwnership(clipboard);
+
 		while (true) {}
 	}
   
 	public void lostOwnership(Clipboard c, Transferable t) {
-		try { 
-			//Add delay to prevent exception
-			Thread.sleep(300);
-			
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
-		}
-		Transferable contents = sysClip.getContents(this); //EXCEPTION
-		processContents(contents);
-		regainOwnership(contents);
-	}
-	
-	void processContents(Transferable t) {
 		try {
-			String data = (String) Toolkit.getDefaultToolkit()
-				.getSystemClipboard().getData(DataFlavor.stringFlavor); 
-			
+			// Pause to wait for clipboard object
+			Thread.sleep(DELAY); 
+
+			// Get current system clipboard instance
+			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+
+			// Get clipboard string data
+			String clipboardString = (String) clipboard.getData(DataFlavor.stringFlavor);
+
+			// Process new clipboard content
 			// Only update if clipboard content changes
-			if (!data.equals(previousClipBoard)) {
-				for(ClipboardInterface listener : listeners){
-					listener.onClipboardUpdate(data);
+			if (!clipboardString.equals(previousClipBoard)) {
+				for(ClipboardInterface listener : listeners) {
+					listener.onClipboardUpdate(clipboardString);
 				}
 			}
-			
-			previousClipBoard = data;
+			previousClipBoard = clipboardString;
 
+			// Assign the new content to clipboard
+			regainClipboardOwnership(clipboard);
+			
 		} catch (Exception e) {
-			System.out.println("Exception: " + e); 
+			MainWindow.consoleLog("Clipboard Listener has crashed, restarting listener.");
+			MainWindow.consoleLog("Please PAUSE in between copy operations!");
+			System.out.println(e);
+
+			// Show dialog to inform user to clipboard listener has crashed
+			for(ClipboardInterface listener : listeners)
+				listener.onClipboardListenerCrash();
+			
+			restartClipboardListener();
 		}
 	}
-	  
-	void regainOwnership(Transferable t) {
-		sysClip.setContents(t, this);
+
+	private void restartClipboardListener() {
+		try {
+			// Pause before reassign clipboard (restart listener)
+			Thread.sleep(DELAY); 
+
+			// Assign the new content to clipboard
+			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+			regainClipboardOwnership(clipboard);
+
+		} catch (Exception deadException) {
+			MainWindow.consoleLog("Unable to restart clipboard listener." + 
+				" Please restart application and try again!");
+			System.out.println(deadException);
+
+			// Show dialog to prompt user to restart program
+			for(ClipboardInterface listener : listeners)
+				listener.onClipboardListenerDied();
+		}
+	}
+
+	private void regainClipboardOwnership(Clipboard clipboard) {
+		Transferable trans = clipboard.getContents(this);
+		clipboard.setContents(trans, this);
 	}
 }
