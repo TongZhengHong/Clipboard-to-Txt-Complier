@@ -46,9 +46,8 @@ public class ButtonActionListener implements ActionListener {
 				mainWindow.outputFolderTextField.setText(filePath);
 
 		} else if (command.equals("Back")) {
-			if (ComplierState.parentDirectory == null || !ComplierState.parentDirectory.exists())
-				return;
-			mainWindow.outputFolderTextField.setText(ComplierState.parentDirectory.getAbsolutePath());
+			if (ComplierState.parentDirectory != null && ComplierState.parentDirectory.exists())
+				mainWindow.outputFolderTextField.setText(ComplierState.parentDirectory.getAbsolutePath());
 
 		} else if (command.equals("Refresh")) {
 			uiUtil.updateFileBrowser();
@@ -69,6 +68,12 @@ public class ButtonActionListener implements ActionListener {
 
 		} else if (command.equals("Duplicate")) {
 			uiUtil.duplicateClipboard();
+
+		} else if (command.equals("Show Top")) {
+			uiUtil.toggleTopBottomFileViewer(true);
+
+		} else if (command.equals("Show Bottom")) {
+			uiUtil.toggleTopBottomFileViewer(false);
 		}
 	}
 }

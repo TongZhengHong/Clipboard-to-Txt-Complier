@@ -13,6 +13,7 @@ public class ComplierState {
 
 	public static boolean isTracking = false;
 	public static boolean incrementNumber = true;
+	public static boolean showTextFileTop = true;
 
     public static int fileSortBy = FileBrowser.NAME_ASCENDING;
 }

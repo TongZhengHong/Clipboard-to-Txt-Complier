@@ -1,5 +1,7 @@
 package main.utility;
 
+import java.awt.Rectangle;
+
 import java.io.File;
 
 import javax.swing.JTextArea;
@@ -158,6 +160,27 @@ public class UiUtil {
     }
 
     /**
+     * Handle show top and bottom button clicks to bring caret of 
+     * file viewer text area to either the top or bottom.
+     * 
+     * @param top
+     */
+    public void toggleTopBottomFileViewer(boolean top) {
+        ComplierState.showTextFileTop = top;
+
+        // Scroll to top or bottom position based on user preference
+        if (ComplierState.showTextFileTop) {
+            Rectangle rect = new Rectangle(0, 0, 1, 1);
+            mainWindow.fileViewerTextArea.scrollRectToVisible(rect);
+
+        } else {
+            int bottom = mainWindow.fileViewerTextArea.getHeight();
+            Rectangle rect = new Rectangle(0, bottom, 1, 1);
+            mainWindow.fileViewerTextArea.scrollRectToVisible(rect);
+        }
+    }
+
+    /**
 	 * Display file contents when text (.txt) FILE is clicked in 
      * fileBrowser. Update <code>selectedFile</code> state.
      * 
@@ -170,7 +193,12 @@ public class UiUtil {
 		// Check if text file selected and show contents
 		String content = FileUtil.readTextFile(selectedFile);
 		mainWindow.fileViewerTextArea.setText(content);
-		mainWindow.fileViewerTextArea.setCaretPosition(0);
+
+        // Set caret position based on user preference
+        if (ComplierState.showTextFileTop)
+		    mainWindow.fileViewerTextArea.setCaretPosition(0);
+        else 
+            bringCursorToStart(mainWindow.fileViewerTextArea);
 	}
 
     /**

@@ -95,6 +95,12 @@ public class ListenerController implements ClipboardInterface {
 		mainWindow.showExplorerButton.setActionCommand("Show Explorer");
 		mainWindow.showExplorerButton.addActionListener(buttonActionListener);
 
+		mainWindow.showTextFileTopButton.setActionCommand("Show Top");
+		mainWindow.showTextFileTopButton.addActionListener(buttonActionListener);
+
+		mainWindow.showTextFileBottomButton.setActionCommand("Show Bottom");
+		mainWindow.showTextFileBottomButton.addActionListener(buttonActionListener);
+
 		mainWindow.duplicateClipboardButton.setMnemonic(KeyEvent.VK_D);
 		mainWindow.duplicateClipboardButton.setActionCommand("Duplicate");
 		mainWindow.duplicateClipboardButton.addActionListener(buttonActionListener);

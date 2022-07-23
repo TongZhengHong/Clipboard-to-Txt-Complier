@@ -48,6 +48,8 @@ public class MainWindow extends JFrame {
 	public JButton sortByNameButton = new JButton("Sort Name");
 	public JButton sortByDateButton = new JButton("Sort Date");
 	public JButton showExplorerButton = new JButton("Show in Explorer");
+	public JButton showTextFileTopButton = new JButton("Show Top");
+	public JButton showTextFileBottomButton = new JButton("Show Bottom");
 	public JButton duplicateClipboardButton = new JButton("Duplicate Clipboard");
 
 	public FileBrowser fileBrowser;
@@ -193,7 +195,7 @@ public class MainWindow extends JFrame {
 		JPanel fileBrowserPanel = new JPanel();
 		JPanel fileControlPanel = new JPanel();
 
-		JPanel clipboardPanel = new JPanel();
+		JPanel fileViewerPanel = new JPanel();
 		JPanel currentFilePanel = new JPanel();
 
 		fileControlPanel.setLayout(new GridLayout(2, 2));
@@ -202,11 +204,11 @@ public class MainWindow extends JFrame {
 				fileControlPanel.getMinimumSize().height));
 
 		fileBrowserPanel.setLayout(new BoxLayout(fileBrowserPanel, BoxLayout.Y_AXIS));
-		clipboardPanel.setLayout(new BoxLayout(clipboardPanel, BoxLayout.Y_AXIS));
+		fileViewerPanel.setLayout(new BoxLayout(fileViewerPanel, BoxLayout.Y_AXIS));
 		currentFilePanel.setLayout(new BoxLayout(currentFilePanel, BoxLayout.Y_AXIS));
 
 		fileBrowserPanel.setBorder(BorderFactory.createTitledBorder("File Browser"));
-		clipboardPanel.setBorder(BorderFactory.createTitledBorder("File Viewer"));
+		fileViewerPanel.setBorder(BorderFactory.createTitledBorder("File Viewer"));
 		currentFilePanel.setBorder(BorderFactory.createTitledBorder("Current Text File"));
 		
 		sortByNameButton.setHorizontalTextPosition(AbstractButton.LEADING); 
@@ -221,17 +223,33 @@ public class MainWindow extends JFrame {
 		fileBrowserPanel.add(fileBrowser);
 		fileBrowserPanel.add(showExplorerButton);
 
-		JPanel tempPanel = new JPanel();
-		tempPanel.setLayout(new GridLayout(1, 1));
-		tempPanel.add(showExplorerButton);
+		JPanel showExplorerPanel = new JPanel();
+		showExplorerPanel.setMaximumSize(new Dimension(
+			showExplorerPanel.getMaximumSize().width,
+			showExplorerPanel.getMinimumSize().height));
+		showExplorerPanel.setLayout(new GridLayout(1, 1));
+		showExplorerPanel.add(showExplorerButton);
+		fileBrowserPanel.add(showExplorerPanel);
 
-		tempPanel.setMaximumSize(new Dimension(
-				tempPanel.getMaximumSize().width,
-				tempPanel.getMinimumSize().height));
-		fileBrowserPanel.add(tempPanel);
+		JPanel showTopPanel = new JPanel();
+		showTopPanel.setMaximumSize(new Dimension(
+			showTopPanel.getMaximumSize().width,
+			showTopPanel.getMinimumSize().height));
+		showTopPanel.setLayout(new GridLayout(1, 1));
+		showTopPanel.add(showTextFileTopButton);
 
 		JScrollPane fileViewerScrollPane = new JScrollPane(fileViewerTextArea);
-		clipboardPanel.add(fileViewerScrollPane);
+
+		JPanel showBottomPanel = new JPanel();
+		showBottomPanel.setMaximumSize(new Dimension(
+			showBottomPanel.getMaximumSize().width,
+			showBottomPanel.getMinimumSize().height));
+		showBottomPanel.setLayout(new GridLayout(1, 1));
+		showBottomPanel.add(showTextFileBottomButton);
+
+		fileViewerPanel.add(showTopPanel);
+		fileViewerPanel.add(fileViewerScrollPane);
+		fileViewerPanel.add(showBottomPanel);
 
 		JPanel duplicateButtonPanel = new JPanel();
 		duplicateButtonPanel.setLayout(new GridLayout(1, 1));
@@ -246,7 +264,7 @@ public class MainWindow extends JFrame {
 
 		centerPanel.setLayout(new GridLayout(1, 3));
 		centerPanel.add(fileBrowserPanel);
-		centerPanel.add(clipboardPanel);
+		centerPanel.add(fileViewerPanel);
 		centerPanel.add(currentFilePanel);
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
