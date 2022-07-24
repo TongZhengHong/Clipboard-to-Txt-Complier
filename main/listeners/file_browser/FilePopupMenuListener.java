@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import main.ComplierState;
+import main.misc.ActionCommands;
 import main.utility.FileUtil;
 import main.utility.UiUtil;
 
@@ -17,16 +18,16 @@ public class FilePopupMenuListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if (command == "open") {
+        if (command.equals(ActionCommands.OPEN_FILE)) {
 			FileUtil.open(ComplierState.selectedFile, false);
             
-        } else if (command == "open notepad") {
+        } else if (command.equals(ActionCommands.OPEN_NOTEPAD)) {
 			FileUtil.open(ComplierState.selectedFile, true);
 
-        } else if (command == "rename") {
+        } else if (command.equals(ActionCommands.RENAME_FILE)) {
 			uiUtil.renameFile(ComplierState.selectedFile);
 
-        } else if (command == "delete") {
+        } else if (command.equals(ActionCommands.DELETE_FILE)) {
             uiUtil.deleteFile(ComplierState.selectedFile);
         }
     }

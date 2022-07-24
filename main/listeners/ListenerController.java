@@ -18,6 +18,7 @@ import main.listeners.file_browser.FileBrowserMouseListener;
 import main.listeners.file_browser.FilePopupMenuListener;
 import main.listeners.text_field.FileNameDocumentListener;
 import main.listeners.text_field.OutputFolderDocumentListener;
+import main.misc.ActionCommands;
 import main.misc.IntegerFilter;
 import main.utility.DialogUtil;
 import main.utility.UiUtil;
@@ -70,43 +71,43 @@ public class ListenerController implements ClipboardInterface {
 		ButtonActionListener buttonActionListener = new ButtonActionListener(mainWindow, uiUtil);
 
 		mainWindow.startStopButton.setMnemonic(KeyEvent.VK_S);
-		mainWindow.startStopButton.setActionCommand("Start");
+		mainWindow.startStopButton.setActionCommand(ActionCommands.START);
 		mainWindow.startStopButton.addActionListener(buttonActionListener);
 
 		mainWindow.fileChooserButton.setMnemonic(KeyEvent.VK_C);
-		mainWindow.fileChooserButton.setActionCommand("Choose Folder");
+		mainWindow.fileChooserButton.setActionCommand(ActionCommands.CHOOSE_FOLDER);
 		mainWindow.fileChooserButton.addActionListener(buttonActionListener);
 
 		mainWindow.backButton.setMnemonic(KeyEvent.VK_B);
-		mainWindow.backButton.setActionCommand("Back");
+		mainWindow.backButton.setActionCommand(ActionCommands.BACK);
 		mainWindow.backButton.addActionListener(buttonActionListener);
 
 		mainWindow.refreshButton.setMnemonic(KeyEvent.VK_R);
-		mainWindow.refreshButton.setActionCommand("Refresh");
+		mainWindow.refreshButton.setActionCommand(ActionCommands.REFRESH);
 		mainWindow.refreshButton.addActionListener(buttonActionListener);
 
-		mainWindow.sortByNameButton.setActionCommand("Sort by Name");
+		mainWindow.sortByNameButton.setActionCommand(ActionCommands.SORT_BY_NAME);
 		mainWindow.sortByNameButton.addActionListener(buttonActionListener);
 
-		mainWindow.sortByDateButton.setActionCommand("Sort by Date");
+		mainWindow.sortByDateButton.setActionCommand(ActionCommands.SORT_BY_DATE);
 		mainWindow.sortByDateButton.addActionListener(buttonActionListener);
 
 		mainWindow.showExplorerButton.setMnemonic(KeyEvent.VK_E);
-		mainWindow.showExplorerButton.setActionCommand("Show Explorer");
+		mainWindow.showExplorerButton.setActionCommand(ActionCommands.SHOW_EXPLORER);
 		mainWindow.showExplorerButton.addActionListener(buttonActionListener);
 
-		mainWindow.showTextFileTopButton.setActionCommand("Show Top");
+		mainWindow.showTextFileTopButton.setActionCommand(ActionCommands.SHOW_TOP);
 		mainWindow.showTextFileTopButton.addActionListener(buttonActionListener);
 
-		mainWindow.showTextFileBottomButton.setActionCommand("Show Bottom");
+		mainWindow.showTextFileBottomButton.setActionCommand(ActionCommands.SHOW_BOTTOM);
 		mainWindow.showTextFileBottomButton.addActionListener(buttonActionListener);
 
 		mainWindow.duplicateClipboardButton.setMnemonic(KeyEvent.VK_D);
-		mainWindow.duplicateClipboardButton.setActionCommand("Duplicate");
+		mainWindow.duplicateClipboardButton.setActionCommand(ActionCommands.DUPLICATE);
 		mainWindow.duplicateClipboardButton.addActionListener(buttonActionListener);
 
 		mainWindow.saveButton.setToolTipText("Save file (Ctrl+S)");
-		mainWindow.saveButton.setActionCommand("Save File");
+		mainWindow.saveButton.setActionCommand(ActionCommands.SAVE_FILE);
 		mainWindow.saveButton.addActionListener(buttonActionListener);
 
 		// Add accelerator for save button
@@ -154,16 +155,16 @@ public class ListenerController implements ClipboardInterface {
 
 		FilePopupMenuListener popupMenuListener = new FilePopupMenuListener(uiUtil);
 
-		mainWindow.fileBrowserPopupMenu.openMenuItem.setActionCommand("open");
+		mainWindow.fileBrowserPopupMenu.openMenuItem.setActionCommand(ActionCommands.OPEN_FILE);
 		mainWindow.fileBrowserPopupMenu.openMenuItem.addActionListener(popupMenuListener);
 
-		mainWindow.fileBrowserPopupMenu.openNotepadMenuItem.setActionCommand("open notepad");
+		mainWindow.fileBrowserPopupMenu.openNotepadMenuItem.setActionCommand(ActionCommands.OPEN_NOTEPAD);
 		mainWindow.fileBrowserPopupMenu.openNotepadMenuItem.addActionListener(popupMenuListener);
 
-		mainWindow.fileBrowserPopupMenu.renameMenuItem.setActionCommand("rename");
+		mainWindow.fileBrowserPopupMenu.renameMenuItem.setActionCommand(ActionCommands.RENAME_FILE);
 		mainWindow.fileBrowserPopupMenu.renameMenuItem.addActionListener(popupMenuListener);
 
-		mainWindow.fileBrowserPopupMenu.deleteMenuItem.setActionCommand("delete");
+		mainWindow.fileBrowserPopupMenu.deleteMenuItem.setActionCommand(ActionCommands.DELETE_FILE);
 		mainWindow.fileBrowserPopupMenu.deleteMenuItem.addActionListener(popupMenuListener);
 	}
 
