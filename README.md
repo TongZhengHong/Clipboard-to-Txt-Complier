@@ -2,10 +2,11 @@
 
 Clipboard to Txt complier is a Java program that helps to compile user copied content into text files. It listens to clipboard changes and temporarily stores them together before user save it in a .txt file. Comes with in an in-built file browser and file viewer section to help manage and view saved text files.
 
-<!-- Screenshot of program -->
-<p align="center">
-    <img src="./main/images/mainWindow.png" width="600">
-</p>
+<div align="center">
+    
+![](main/images/mainWindow.png)
+
+</div>
 
 ## Installation
 
